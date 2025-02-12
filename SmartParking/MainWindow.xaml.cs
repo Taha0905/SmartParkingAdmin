@@ -12,6 +12,11 @@ namespace SmartParking
         public MainWindow()
         {
             InitializeComponent();
+
+            // Configurer la fenêtre pour qu'elle s'ouvre en plein écran
+            this.WindowStyle = WindowStyle.None;
+            this.WindowState = WindowState.Maximized;
+            this.ResizeMode = ResizeMode.NoResize;
         }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -81,6 +86,12 @@ namespace SmartParking
             }
 
             return false;
+        }
+
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+                Application.Current.Shutdown();
         }
     }
 }

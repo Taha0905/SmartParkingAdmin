@@ -1,83 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
-using Newtonsoft.Json;
 
 namespace SmartParking
 {
     public partial class Admin : Page
     {
-        private const string ApiUrl = "https://smartparking.alwaysdata.net/getAllPlaces";
-        private DispatcherTimer timer;
-
         public Admin()
         {
             InitializeComponent();
-
-            // Charger les données immédiatement au démarrage
-            ChargerPlaces();
-
-            // Initialiser le timer pour les mises à jour régulières
-            InitializeTimer();
+            // Affichage de la page "Vue d'ensemble" par défaut
+            ContentFrame.Navigate(new VueDensemble());
         }
 
-        // Initialisation du timer
-        private void InitializeTimer()
+        // Gestion du clic sur le bouton "Analyse"
+        private void AnalyseButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(5) // Mise à jour toutes les 5 secondes
-            };
-            timer.Tick += Timer_Tick; // Événement déclenché à chaque tick
-            timer.Start();
+            ContentFrame.Navigate(new Analyse());
         }
 
-        // Événement appelé par le timer
-        private void Timer_Tick(object sender, EventArgs e)
+        // Gestion du clic sur le bouton "Vue d'ensemble"
+        private void VueDensembleButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ChargerPlaces(); // Mettre à jour les places
+            ContentFrame.Navigate(new VueDensemble());
         }
 
-        // Charger les places depuis l'API
-        private async void ChargerPlaces()
+        // Gestion du clic sur le bouton "Caméra"
+        private void CameraButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    HttpResponseMessage response = await client.GetAsync(ApiUrl);
-                    response.EnsureSuccessStatusCode(); // Vérifier si l'API répond
-                    string jsonResponse = await response.Content.ReadAsStringAsync();
-
-                    List<Place> places = JsonConvert.DeserializeObject<List<Place>>(jsonResponse);
-
-                    // Compter le nombre de places selon leur statut
-                    int libres = places.FindAll(p => p.StatutPlace == "Libre").Count;
-                    int reserves = places.FindAll(p => p.StatutPlace == "Reserver").Count;
-                    int occupees = places.Count - (libres + reserves); // Si autre statut
-
-                    // Mettre à jour l'interface utilisateur
-                    TextLibre.Text = $"Places libres : {libres}";
-                    TextOccupe.Text = $"Places occupées : {occupees}";
-                    TextReserve.Text = $"Places réservées : {reserves}";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors du chargement des places : {ex.Message}");
-            }
+            ContentFrame.Navigate(new Camera());
         }
-    }
 
-    // Classe pour représenter une place
-    public class Place
-    {
-        public int IDPlace { get; set; }
-        public int NumeroPlace { get; set; }
-        public string StatutPlace { get; set; }
+        private void LogoutButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            // Retour à la page de connexion
+            MainWindow loginWindow = new MainWindow();
+            loginWindow.Show(); // Afficher la fenêtre de connexion
+            Window.GetWindow(this).Close(); // Fermer la fenêtre actuelle (Admin)
+        }
     }
 }
