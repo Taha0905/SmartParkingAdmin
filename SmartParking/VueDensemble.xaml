@@ -6,55 +6,112 @@
       xmlns:local="clr-namespace:SmartParking"
       mc:Ignorable="d" 
       d:DesignHeight="1040" d:DesignWidth="1500"
-      Title="VueDensemble" Background="White">
+      Title="VueDensemble" Background="#F5F5F5">
 
-    <Grid>
-        <!-- Définition des lignes -->
+    <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
-            <!-- Ligne du haut pour les places -->
-            <RowDefinition Height="3*" />
-            <!-- Ligne du bas pour du contenu supplémentaire -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Définition des colonnes (6 colonnes) -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Places disponibles -->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="#EAF8F0" CornerRadius="15" Padding="20" Margin="20">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="🚗 Places disponibles" FontWeight="Bold" FontSize="28" Foreground="#48BB78" TextAlignment="Center"/>
-                <TextBlock x:Name="TextLibre" Text="0" FontSize="50" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <!-- Places Occupées -->
+        <Border Grid.Row="0" Grid.Column="0" Background="#FFEB83" CornerRadius="10" Padding="10" Margin="10">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="TextOccupe" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
+                <TextBlock Text=" / " FontSize="24" FontWeight="Bold" Foreground="Gray"/>
+                <TextBlock x:Name="TextTotal" Text="0" FontSize="24" FontWeight="Bold" Foreground="#F0C674"/>
+                <TextBlock Text=" Places occupées" FontSize="14" Foreground="Gray" Margin="10,5,0,0"/>
             </StackPanel>
         </Border>
 
-        <!-- Places occupées -->
-        <Border Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Background="#FBE9E9" CornerRadius="15" Padding="20" Margin="20">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="🚧 Places occupées" FontWeight="Bold" FontSize="28" Foreground="#E53E3E" TextAlignment="Center"/>
-                <TextBlock x:Name="TextOccupe" Text="0" FontSize="50" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <!-- Places Disponibles -->
+        <Border Grid.Row="0" Grid.Column="1" Background="#FFEB83" CornerRadius="10" Padding="10" Margin="10">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="TextLibre" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
+                <TextBlock Text=" Places disponibles" FontSize="14" Foreground="Gray" Margin="10,5,0,0"/>
             </StackPanel>
         </Border>
 
-        <!-- Places réservées -->
-        <Border Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Background="#FFF3CD" CornerRadius="15" Padding="20" Margin="20">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="🔒 Places réservées" FontWeight="Bold" FontSize="28" Foreground="#ECC94B" TextAlignment="Center"/>
-                <TextBlock x:Name="TextReserve" Text="0" FontSize="50" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <!-- Places Réservées -->
+        <Border Grid.Row="0" Grid.Column="2" Background="#FFEB83" CornerRadius="10" Padding="10" Margin="10">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="TextReserve" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
+                <TextBlock Text=" Places réservées" FontSize="14" Foreground="Gray" Margin="10,5,0,0"/>
             </StackPanel>
         </Border>
 
-        <!-- Zone supplémentaire en bas (à remplir plus tard) -->
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Background="Transparent" Padding="20" Margin="20">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="🔹 Contenu supplémentaire ici 🔹" FontWeight="Bold" FontSize="22" Foreground="Gray" TextAlignment="Center"/>
+        <!-- Liste des réservations -->
+        <Border Grid.Row="1" Grid.ColumnSpan="3" Background="White" CornerRadius="15" Padding="20" Margin="10">
+            <StackPanel>
+                <TextBlock Text="📌 Liste des Réservations" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <ScrollViewer Height="400">
+                    <ListView x:Name="ListViewReservations" ItemsSource="{Binding Reservations}" 
+          Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+          Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White" CornerRadius="10" Padding="15" Margin="5"
+                    BorderBrush="#FFD966" BorderThickness="2" HorizontalAlignment="Stretch">
+                                    <Grid Width="Auto">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- ID de la réservation -->
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="Réservation #" FontSize="12" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding IDReservation}" FontSize="18" FontWeight="Bold" Foreground="Black"/>
+                                        </StackPanel>
+
+                                        <!-- Date -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="📅 Date" FontSize="12" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding DateReservationFormatted}" FontSize="16" Foreground="Black"/>
+                                        </StackPanel>
+
+                                        <!-- Durée -->
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBlock Text="⏳ Durée" FontSize="12" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding TempsReservationFormatted}" FontSize="16" Foreground="Black"/>
+                                        </StackPanel>
+
+                                        <!-- Immatriculation -->
+                                        <StackPanel Grid.Column="3" VerticalAlignment="Center">
+                                            <TextBlock Text="🚗 Immatriculation" FontSize="12" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding Immatriculation}" FontSize="16" Foreground="Black"/>
+                                        </StackPanel>
+
+                                        <!-- Bouton de suppression -->
+                                        <Button Grid.Column="4" Content="✖" Foreground="White" FontSize="16" Padding="5" 
+                            Command="{Binding DeleteCommand}" Width="40" Height="40"
+                            Background="Red" BorderBrush="Transparent" Cursor="Hand"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </ScrollViewer>
             </StackPanel>
         </Border>
     </Grid>
