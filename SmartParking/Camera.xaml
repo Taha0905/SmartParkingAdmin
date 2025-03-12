@@ -21,7 +21,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Zone vidéo -->
-                <Border Grid.Row="0" Background="Black" CornerRadius="15" BorderBrush="#FFD966" BorderThickness="3" Margin="20">
+                <Border Grid.Row="0" Background="Black" CornerRadius="15" BorderBrush="#2C3E50" BorderThickness="3" Margin="20">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <!-- Ici, on affiche la vidéo (ex: avec un MediaElement ou une Image en flux) -->
                         <TextBlock Text="🔴 Flux Vidéo en Direct" Foreground="White" FontSize="25" FontWeight="Bold" TextAlignment="Center" Margin="0,20,0,10"/>
@@ -31,7 +31,7 @@
                 </Border>
 
                 <!-- Panneau de contrôle -->
-                <Border Grid.Row="1" Background="#FFEB83" CornerRadius="15" Padding="20" Margin="226,20,226,20" BorderBrush="#FFD966" BorderThickness="2">
+                <Border Grid.Row="1"  CornerRadius="15" Padding="20" Margin="226,20,226,20"  BorderThickness="2">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <!-- Bouton Activer Caméra -->
                         <Button Content="▶️ Activer Caméra" FontSize="22" Foreground="White" Background="Green" Width="250" Height="60"
