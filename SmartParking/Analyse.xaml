@@ -3,11 +3,74 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
       Title="Analyse">
 
-    <Grid Background="Goldenrod">
-        <TextBlock Text="Page Analyse" Foreground="White" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Center" />
+    <Grid Background="#FAFAFA">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="1200">
+
+            <TextBlock Text="État du Parking" 
+                       Foreground="#333" 
+                       FontSize="55" FontWeight="Bold"
+                       TextAlignment="Center" Margin="0,0,0,50"/>
+
+            <UniformGrid Columns="2" Rows="2" Margin="20" HorizontalAlignment="Center">
+
+                <!-- Température -->
+                <Border Background="White" CornerRadius="20" Padding="20" Margin="15"
+                        Width="550" Height="350"
+                        Effect="{DynamicResource MaterialDesignShadowDepth3}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <material:PackIcon Kind="Thermometer" Width="140" Height="140" Foreground="#FF6F59"/>
+                        <TextBlock x:Name="txtTemperature" Text="25°C" Foreground="#444" FontSize="40" 
+                                   FontWeight="Medium" TextAlignment="Center" Margin="0,20,0,0"/>
+                        <TextBlock Text="Température" Foreground="#777" FontSize="25" 
+                                   TextAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Humidité -->
+                <Border Background="White" CornerRadius="20" Padding="20" Margin="15"
+                        Width="550" Height="350"
+                        Effect="{DynamicResource MaterialDesignShadowDepth3}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <material:PackIcon Kind="WaterPercent" Width="140" Height="140" Foreground="#1E90FF"/>
+                        <TextBlock x:Name="txtHumidite" Text="50%" Foreground="#444" FontSize="35" 
+                                   FontWeight="Medium" TextAlignment="Center" Margin="0,20,0,0"/>
+                        <TextBlock Text="Humidité" Foreground="#777" FontSize="25" 
+                                   TextAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- CO₂ -->
+                <Border Background="White" CornerRadius="20" Padding="20" Margin="15"
+                        Width="550" Height="350"
+                        Effect="{DynamicResource MaterialDesignShadowDepth3}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <material:PackIcon Kind="MoleculeCo2" Width="140" Height="140" Foreground="#66BB6A"/>
+                        <TextBlock x:Name="txtCO2" Text="400 ppm" Foreground="#444" FontSize="35" 
+                                   FontWeight="Medium" TextAlignment="Center" Margin="0,20,0,0"/>
+                        <TextBlock Text="CO₂" Foreground="#777" FontSize="25" 
+                                   TextAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Niveau sonore -->
+                <Border Background="White" CornerRadius="20" Padding="20" Margin="15"
+                        Width="550" Height="350"
+                        Effect="{DynamicResource MaterialDesignShadowDepth3}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <material:PackIcon Kind="VolumeHigh" Width="140" Height="140" Foreground="#9C27B0"/>
+                        <TextBlock x:Name="txtSon" Text="60 dB" Foreground="#444" FontSize="35" 
+                                   FontWeight="Medium" TextAlignment="Center" Margin="0,20,0,0"/>
+                        <TextBlock Text="Niveau Sonore" Foreground="#777" FontSize="25" 
+                                   TextAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+            </UniformGrid>
+        </StackPanel>
     </Grid>
 </Page>

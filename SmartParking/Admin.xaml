@@ -39,11 +39,8 @@
                     <Button Content="Caméra" Background="Transparent" Foreground="Black" FontSize="18"
                             BorderThickness="0" Padding="10,5" Click="CameraButton_Click" HorizontalAlignment="Left"/>
 
-                    <Button Content="Mon Compte" Background="Transparent" Foreground="Black" FontSize="18"
-                            BorderThickness="0" Padding="10,5" HorizontalAlignment="Left"/>
-
                     <Button Content="Aide" Background="Transparent" Foreground="Black" FontSize="18"
-                            BorderThickness="0" Padding="10,5" HorizontalAlignment="Left"/>
+                            BorderThickness="0" Padding="10,5" HorizontalAlignment="Left" Click="AideButton_Click"/>
                 </StackPanel>
 
                 <!-- Bouton Déconnexion en bas avec le même style que les autres -->

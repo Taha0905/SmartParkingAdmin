@@ -74,7 +74,7 @@ namespace SmartParking
                         TextLibre.Text = placesDisponibles.ToString();
                         TextOccupe.Text = placesOccupees.ToString();
                         TextReserve.Text = placesReservees.ToString();
-                        TextTotal.Text = totalPlaces.ToString();
+                        
                     }
                     else
                     {

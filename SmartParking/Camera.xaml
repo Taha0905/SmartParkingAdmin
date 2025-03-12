@@ -5,10 +5,43 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SmartParking"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="1040" d:DesignWidth="1500"
       Title="Camera">
 
-    <Grid Background="Red">
-        
+    <Grid Background="#F5F5F5">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20">
+            <!-- Titre -->
+            <TextBlock Text="🎥 Vidéosurveillance" Foreground="Black" FontSize="50" FontWeight="Bold" TextAlignment="Center" Margin="0,0,0,40"/>
+
+            <!-- Conteneur principal -->
+            <Grid Width="1100" Height="650">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Zone vidéo -->
+                <Border Grid.Row="0" Background="Black" CornerRadius="15" BorderBrush="#FFD966" BorderThickness="3" Margin="20">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <!-- Ici, on affiche la vidéo (ex: avec un MediaElement ou une Image en flux) -->
+                        <TextBlock Text="🔴 Flux Vidéo en Direct" Foreground="White" FontSize="25" FontWeight="Bold" TextAlignment="Center" Margin="0,20,0,10"/>
+                        <Rectangle Width="800" Height="450" Fill="Gray" Opacity="0.3"/>
+                        <TextBlock Text="(Aperçu vidéo ici)" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,20,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Panneau de contrôle -->
+                <Border Grid.Row="1" Background="#FFEB83" CornerRadius="15" Padding="20" Margin="226,20,226,20" BorderBrush="#FFD966" BorderThickness="2">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <!-- Bouton Activer Caméra -->
+                        <Button Content="▶️ Activer Caméra" FontSize="22" Foreground="White" Background="Green" Width="250" Height="60"
+                                BorderBrush="Transparent" Cursor="Hand" Margin="10"/>
+                        <!-- Bouton Arrêter Caméra -->
+                        <Button Content="⏹ Arrêter Caméra" FontSize="22" Foreground="White" Background="Red" Width="250" Height="60"
+                                BorderBrush="Transparent" Cursor="Hand" Margin="10"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
     </Grid>
 </Page>

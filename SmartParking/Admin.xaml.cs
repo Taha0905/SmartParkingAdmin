@@ -37,5 +37,11 @@ namespace SmartParking
             loginWindow.Show(); // Afficher la fenêtre de connexion
             Window.GetWindow(this).Close(); // Fermer la fenêtre actuelle (Admin)
         }
+
+        private void AideButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Aide());
+
+        }
     }
 }

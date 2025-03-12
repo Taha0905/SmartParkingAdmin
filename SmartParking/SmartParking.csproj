@@ -9,15 +9,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Source\Images\co2.png" />
     <None Remove="Source\Images\fond.png" />
     <None Remove="Source\Images\logosmart.png" />
+    <None Remove="Source\Images\sound.png" />
+    <None Remove="Source\Images\temperature.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Source\Images\co2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Source\Images\fond.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -25,6 +33,15 @@
 
   <ItemGroup>
     <Content Include="Source\Images\logosmart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Source\Images\sound.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Source\Images\temperature.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
