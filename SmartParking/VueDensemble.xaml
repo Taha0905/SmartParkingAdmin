@@ -32,11 +32,10 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <!-- Places Occupées -->
-                <Border Grid.Column="0" Background="#FFEB83" CornerRadius="12" Padding="15" Margin="10">
+                <Border Grid.Column="0" Background="#FFEB83" CornerRadius="12" Padding="15" Margin="10" Opacity="0.7">
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock x:Name="TextOccupe" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
@@ -47,24 +46,13 @@
                 </Border>
 
                 <!-- Places disponibles -->
-                <Border Grid.Column="1" Background="#FFEB83" CornerRadius="10" Padding="15" Margin="10">
+                <Border Grid.Column="1" Background="#FFEB83" CornerRadius="10" Padding="15" Margin="10" Opacity="0.7">
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock x:Name="TextLibre" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
                             <TextBlock Text=" /6" FontSize="24" FontWeight="Bold" Foreground="Gray"/>
                         </StackPanel>
                         <TextBlock Text="Places disponibles" FontSize="14" Foreground="Gray" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Places réservées -->
-                <Border Grid.Column="2" Background="#FFEB83" CornerRadius="10" Padding="15" Margin="10">
-                    <StackPanel HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TextReserve" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
-                            <TextBlock Text=" /6" FontSize="24" FontWeight="Bold" Foreground="Gray"/>
-                        </StackPanel>
-                        <TextBlock Text="Places réservées" FontSize="14" Foreground="Gray" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </Grid>

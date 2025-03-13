@@ -12,11 +12,14 @@
     <None Remove="Source\Images\co2.png" />
     <None Remove="Source\Images\fond.png" />
     <None Remove="Source\Images\logosmart.png" />
+    <None Remove="Source\Images\Smart.png" />
     <None Remove="Source\Images\sound.png" />
     <None Remove="Source\Images\temperature.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="M2Mqtt" Version="4.3.0" />
+    <PackageReference Include="M2MqttClientDotnetCore" Version="1.0.1" />
     <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -33,6 +36,9 @@
 
   <ItemGroup>
     <Content Include="Source\Images\logosmart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Source\Images\Smart.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Source\Images\sound.png">
