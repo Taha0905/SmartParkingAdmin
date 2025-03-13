@@ -1,24 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using MQTTnet;
+using MQTTnet.Client;
+using MQTTnet.Client.Options;
 using Newtonsoft.Json;
-using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using System.Net.Http;
+using MQTTnet.Client.Receiving;
 
 namespace SmartParking
 {
     public partial class VueDensemble : Page
     {
-        private readonly string apiPlaces = "https://smartparking.alwaysdata.net/getAllPlaces";
         private readonly string apiReservations = "https://smartparking.alwaysdata.net/getAllReservations";
         private readonly string apiDeleteReservation = "https://smartparking.alwaysdata.net/deleteReservation";
-        private readonly string apiUpdatePlace = "https://smartparking.alwaysdata.net/updatePlace";
+
         private readonly DispatcherTimer refreshTimer;
+        private IMqttClient mqttClient;
+        private Dictionary<string, string> placesEtat = new Dictionary<string, string>(); // Stocke l'état des places
 
         public ObservableCollection<Reservation> Reservations { get; set; }
 
@@ -28,63 +34,72 @@ namespace SmartParking
             Reservations = new ObservableCollection<Reservation>();
             ListViewReservations.ItemsSource = Reservations;
 
-            LoadParkingData();
+            // Charger uniquement les réservations depuis la BDD
             LoadReservationsData();
 
-            // Rafraîchir toutes les 5 secondes
+            // Connexion au Broker MQTT pour gérer les places
+            Task.Run(async () => await ConnectToMqttBrokerAsync());
+
+            // Rafraîchir les réservations toutes les 5 secondes
             refreshTimer = new DispatcherTimer();
             refreshTimer.Interval = TimeSpan.FromSeconds(5);
-            refreshTimer.Tick += (s, e) => { LoadParkingData(); LoadReservationsData(); };
+            refreshTimer.Tick += (s, e) => { LoadReservationsData(); };
             refreshTimer.Start();
         }
 
-        private async void LoadParkingData()
+        private async Task ConnectToMqttBrokerAsync()
         {
-            try
+            var factory = new MqttFactory();
+            mqttClient = factory.CreateMqttClient();
+
+            var options = new MqttClientOptionsBuilder()
+                .WithClientId("SmartParking_Client")
+                .WithTcpServer("172.31.254.254", 1883) // Adresse et port de ton broker MQTT
+                .WithCleanSession(false) // Garde l'historique des messages
+                .Build();
+
+            mqttClient.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(e =>
             {
-                using (HttpClient client = new HttpClient())
+                string topic = e.ApplicationMessage.Topic;
+                string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+                ProcessMqttMessage(topic, payload);
+            });
+
+            await mqttClient.ConnectAsync(options, CancellationToken.None);
+
+            // Liste des topics MQTT correspondant aux places du parking
+            string[] topics = { "places/place1", "places/place2", "places/place3",
+                                "places/place4", "places/place5", "places/place6" };
+
+            foreach (var topic in topics)
+            {
+                placesEtat[topic] = "Inconnu"; // Valeur par défaut
+                await mqttClient.SubscribeAsync(topic);
+            }
+        }
+
+        private void ProcessMqttMessage(string topic, string message)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                placesEtat[topic] = message;
+
+                // Recalculer les totaux
+                int placesLibres = 0;
+                int placesOccupees = 0;
+
+                foreach (var etat in placesEtat.Values)
                 {
-                    HttpResponseMessage response = await client.GetAsync(apiPlaces);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string jsonResponse = await response.Content.ReadAsStringAsync();
-                        List<Place> places = JsonConvert.DeserializeObject<List<Place>>(jsonResponse);
-
-                        int placesDisponibles = 0;
-                        int placesOccupees = 0;
-                        int placesReservees = 0;
-                        int totalPlaces = places.Count;
-
-                        foreach (var place in places)
-                        {
-                            switch (place.StatutPlace.ToLower())
-                            {
-                                case "libre":
-                                    placesDisponibles++;
-                                    break;
-                                case "occuper":
-                                    placesOccupees++;
-                                    break;
-                                case "reserver":
-                                    placesReservees++;
-                                    break;
-                            }
-                        }
-
-                        TextLibre.Text = placesDisponibles.ToString();
-                        TextOccupe.Text = placesOccupees.ToString();
-                        
-                    }
-                    else
-                    {
-                        MessageBox.Show("Erreur lors de la récupération des places.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    if (etat.Equals("Libre", StringComparison.OrdinalIgnoreCase))
+                        placesLibres++;
+                    else if (etat.Equals("Prise", StringComparison.OrdinalIgnoreCase))
+                        placesOccupees++;
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+
+                // Mise à jour des TextBlocks dans VueDensemble.xaml
+                TextLibre.Text = placesLibres.ToString();
+                TextOccupe.Text = placesOccupees.ToString();
+            });
         }
 
         private async void LoadReservationsData()
@@ -105,7 +120,7 @@ namespace SmartParking
                             res.DateReservationFormatted = DateTime.Parse(res.DateReservation).ToString("dd/MM/yyyy HH:mm");
                             TimeSpan duration = TimeSpan.Parse(res.TempsReservation);
                             res.TempsReservationFormatted = $"{duration.Hours}h {duration.Minutes}m";
-                            res.DeleteCommand = new RelayCommand(async () => await DeleteReservation(res.IDReservation, res.FKIDPlace));
+                            res.DeleteCommand = new RelayCommand(async () => await DeleteReservation(res.IDReservation));
                             Reservations.Add(res);
                         }
                     }
@@ -121,13 +136,12 @@ namespace SmartParking
             }
         }
 
-        private async Task DeleteReservation(int reservationId, int placeId)
+        private async Task DeleteReservation(int reservationId)
         {
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    // Suppression de la réservation
                     HttpResponseMessage deleteResponse = await client.DeleteAsync($"{apiDeleteReservation}/{reservationId}");
                     if (!deleteResponse.IsSuccessStatusCode)
                     {
@@ -136,44 +150,7 @@ namespace SmartParking
                         return;
                     }
 
-                    // Charger toutes les places et chercher la place concernée
-                    HttpResponseMessage placesResponse = await client.GetAsync(apiPlaces);
-                    if (!placesResponse.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show($"Erreur lors de la récupération des places. Réponse API: {await placesResponse.Content.ReadAsStringAsync()}",
-                                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-
-                    string placesJson = await placesResponse.Content.ReadAsStringAsync();
-                    List<Place> places = JsonConvert.DeserializeObject<List<Place>>(placesJson);
-
-                    // Trouver la place correspondante
-                    Place place = places.Find(p => p.IDPlace == placeId);
-                    if (place == null)
-                    {
-                        MessageBox.Show("Impossible de trouver la place associée à la réservation.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-
-                    // Mise à jour de la place en libre
-                    var updateData = new StringContent(JsonConvert.SerializeObject(new
-                    {
-                        NumeroPlace = place.NumeroPlace,
-                        StatutPlace = "libre"
-                    }), Encoding.UTF8, "application/json");
-
-                    HttpResponseMessage updateResponse = await client.PutAsync($"{apiUpdatePlace}/{placeId}", updateData);
-
-                    if (!updateResponse.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show($"Erreur lors de la mise à jour de la place. Réponse API: {await updateResponse.Content.ReadAsStringAsync()}",
-                                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-
                     // Mise à jour des données après la suppression
-                    LoadParkingData();
                     LoadReservationsData();
                 }
             }
@@ -184,20 +161,12 @@ namespace SmartParking
         }
     }
 
-    public class Place
-    {
-        public int IDPlace { get; set; }
-        public int NumeroPlace { get; set; }
-        public string StatutPlace { get; set; }
-    }
-
     public class Reservation
     {
         public int IDReservation { get; set; }
         public string DateReservation { get; set; }
         public string TempsReservation { get; set; }
         public string Immatriculation { get; set; }
-        public int FKIDPlace { get; set; }
 
         public string DateReservationFormatted { get; set; }
         public string TempsReservationFormatted { get; set; }
