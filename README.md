@@ -1,4 +1,4 @@
-SmartParking - Application Admin
+SmartParking
 
 Description du projet
 
