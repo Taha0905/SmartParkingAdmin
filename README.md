@@ -1,3 +1,11 @@
+SmartParking - Application Admin
+
+Description du projet
+
+SmartParking est une application de réservation de places de parking et de gestion de parking. Ce projet inclut une interface utilisateur pour les clients ainsi qu'une application d'administration permettant de superviser l'ensemble du système.
+
+ADMIN :
+
 Fonctionnalités
 
 1. Vue d'ensemble
@@ -51,3 +59,8 @@ Récupération des données des capteurs environnementaux.
 Récupération de l'état des places de parking (occupées ou non) via des capteurs à ultrasons (données fournies par un collègue).
 
 Vidéo : Intégration d'un flux vidéo pour la surveillance du parking
+
+
+CLIENT:
+
+PHYSIQUE:
