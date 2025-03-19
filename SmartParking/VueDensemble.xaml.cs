@@ -11,20 +11,21 @@ using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System.Net.Http;
+using SmartParking.Source.Modele;
 using MQTTnet.Client.Receiving;
 
 namespace SmartParking
 {
     public partial class VueDensemble : Page
     {
-        private readonly string apiReservations = "https://smartparking.alwaysdata.net/getAllReservations";
-        private readonly string apiDeleteReservation = "https://smartparking.alwaysdata.net/deleteReservation";
+        private const string Token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDIzMDg4NTEsImV4cCI6MTAxNzQyMzA4ODUxLCJkYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6IlNtYXJ0UGFya2luZyJ9fQ.B-dPPnoL4DnwsZ6_j6GRxs74Zn5XLQw-K8OjWIbegjk";
+        private const string ApiReservations = "https://smartparking.alwaysdata.net/getAllReservations";
+        private const string ApiDeleteReservation = "https://smartparking.alwaysdata.net/deleteReservation";
 
         private readonly DispatcherTimer refreshTimer;
         private IMqttClient mqttClient;
-        private Dictionary<string, string> placesEtat = new Dictionary<string, string>(); // Stocke l'état des places
+        private Dictionary<string, string> placesEtat = new Dictionary<string, string>();
 
         public ObservableCollection<Reservation> Reservations { get; set; }
 
@@ -34,13 +35,10 @@ namespace SmartParking
             Reservations = new ObservableCollection<Reservation>();
             ListViewReservations.ItemsSource = Reservations;
 
-            // Charger uniquement les réservations depuis la BDD
             LoadReservationsData();
 
-            // Connexion au Broker MQTT pour gérer les places
             Task.Run(async () => await ConnectToMqttBrokerAsync());
 
-            // Rafraîchir les réservations toutes les 5 secondes
             refreshTimer = new DispatcherTimer();
             refreshTimer.Interval = TimeSpan.FromSeconds(5);
             refreshTimer.Tick += (s, e) => { LoadReservationsData(); };
@@ -54,8 +52,8 @@ namespace SmartParking
 
             var options = new MqttClientOptionsBuilder()
                 .WithClientId("SmartParking_Client")
-                .WithTcpServer("172.31.254.254", 1883) // Adresse et port de ton broker MQTT
-                .WithCleanSession(false) // Garde l'historique des messages
+                .WithTcpServer("172.31.254.254", 1883)
+                .WithCleanSession(false)
                 .Build();
 
             mqttClient.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(e =>
@@ -67,40 +65,60 @@ namespace SmartParking
 
             await mqttClient.ConnectAsync(options, CancellationToken.None);
 
-            // Liste des topics MQTT correspondant aux places du parking
             string[] topics = { "places/place1", "places/place2", "places/place3",
                                 "places/place4", "places/place5", "places/place6" };
 
             foreach (var topic in topics)
             {
-                placesEtat[topic] = "Inconnu"; // Valeur par défaut
+                placesEtat[topic] = "Inconnu";
                 await mqttClient.SubscribeAsync(topic);
             }
         }
 
         private void ProcessMqttMessage(string topic, string message)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            // Vérifier si l'application est en cours de fermeture
+            if (Application.Current == null || Application.Current.Dispatcher == null)
+                return;
+
+            try
             {
-                placesEtat[topic] = message;
-
-                // Recalculer les totaux
-                int placesLibres = 0;
-                int placesOccupees = 0;
-
-                foreach (var etat in placesEtat.Values)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (etat.Equals("Libre", StringComparison.OrdinalIgnoreCase))
-                        placesLibres++;
-                    else if (etat.Equals("Prise", StringComparison.OrdinalIgnoreCase))
-                        placesOccupees++;
-                }
+                    if (placesEtat == null) return; // Vérifie que le dictionnaire est bien initialisé
 
-                // Mise à jour des TextBlocks dans VueDensemble.xaml
-                TextLibre.Text = placesLibres.ToString();
-                TextOccupe.Text = placesOccupees.ToString();
-            });
+                    placesEtat[topic] = message;
+
+                    int placesLibres = 0;
+                    int placesOccupees = 0;
+
+                    foreach (var etat in placesEtat.Values)
+                    {
+                        if (etat.Equals("Libre", StringComparison.OrdinalIgnoreCase))
+                            placesLibres++;
+                        else if (etat.Equals("Prise", StringComparison.OrdinalIgnoreCase))
+                            placesOccupees++;
+                    }
+
+                    // Vérifier que les contrôles existent avant de les modifier
+                    if (TextLibre != null && TextOccupe != null)
+                    {
+                        TextLibre.Text = placesLibres.ToString();
+                        TextOccupe.Text = placesOccupees.ToString();
+                    }
+                });
+            }
+            catch (TaskCanceledException)
+            {
+                // Ne rien faire, l'application est en train de se fermer
+            }
+            catch (Exception ex)
+            {
+                // Log de l'erreur sans bloquer l'application
+                Console.WriteLine($"Erreur dans ProcessMqttMessage : {ex.Message}");
+            }
         }
+
 
         private async void LoadReservationsData()
         {
@@ -108,7 +126,9 @@ namespace SmartParking
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage response = await client.GetAsync(apiReservations);
+                    client.DefaultRequestHeaders.Add("Authorization", Token);
+
+                    HttpResponseMessage response = await client.GetAsync(ApiReservations);
                     if (response.IsSuccessStatusCode)
                     {
                         string jsonResponse = await response.Content.ReadAsStringAsync();
@@ -142,7 +162,9 @@ namespace SmartParking
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage deleteResponse = await client.DeleteAsync($"{apiDeleteReservation}/{reservationId}");
+                    client.DefaultRequestHeaders.Add("Authorization", Token);
+
+                    HttpResponseMessage deleteResponse = await client.DeleteAsync($"{ApiDeleteReservation}/{reservationId}");
                     if (!deleteResponse.IsSuccessStatusCode)
                     {
                         MessageBox.Show($"Erreur lors de la suppression de la réservation. Réponse API: {await deleteResponse.Content.ReadAsStringAsync()}",
@@ -150,7 +172,6 @@ namespace SmartParking
                         return;
                     }
 
-                    // Mise à jour des données après la suppression
                     LoadReservationsData();
                 }
             }
@@ -159,30 +180,5 @@ namespace SmartParking
                 MessageBox.Show($"Erreur: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-    }
-
-    public class Reservation
-    {
-        public int IDReservation { get; set; }
-        public string DateReservation { get; set; }
-        public string TempsReservation { get; set; }
-        public string Immatriculation { get; set; }
-
-        public string DateReservationFormatted { get; set; }
-        public string TempsReservationFormatted { get; set; }
-
-        public ICommand DeleteCommand { get; set; }
-    }
-
-    public class RelayCommand : ICommand
-    {
-        private readonly Func<Task> _executeAsync;
-        public event EventHandler CanExecuteChanged;
-
-        public RelayCommand(Func<Task> executeAsync) => _executeAsync = executeAsync;
-
-        public bool CanExecute(object parameter) => true;
-
-        public async void Execute(object parameter) => await _executeAsync();
     }
 }
