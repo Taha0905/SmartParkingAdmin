@@ -98,7 +98,7 @@ namespace SmartParking
                         placesOccupees++;
                 }
 
-                // Mise à jour des TextBlocks dans VueDensemble.xaml
+                // Mise à jour des TextBlocks dans VueDensemble.xaml/
                 TextLibre.Text = placesLibres.ToString();
                 TextOccupe.Text = placesOccupees.ToString();
             });
