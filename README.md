@@ -63,4 +63,21 @@ Vidéo : Intégration d'un flux vidéo pour la surveillance du parking
 
 CLIENT:
 
+Description
+L'application mobile SmartParking permet aux utilisateurs de créer un compte, de se connecter, de réserver une place de parking et de consulter leur historique de réservation. Elle facilite ainsi la gestion des parkings de manière efficace et connectée.
+
+Fonctionnalités
+
+Création de compte : L'utilisateur peut s'inscrire avec ses informations personnelles.
+Connexion : Authentification sécurisée pour accéder à son espace personnel.
+Réservation de place : L'utilisateur peut réserver une place disponible dans le parking.
+Consultation des réservations : Accès à l'historique des réservations effectuées.
+
+Technologies utilisées
+
+Framework : Flutter (Dart)
+Base de données : API REST
+Authentification : JWT
+Gestion des requêtes : HTTP et API REST
+
 PHYSIQUE:
