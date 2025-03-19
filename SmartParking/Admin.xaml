@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Barre latérale gauche -->
-        <Border Grid.Column="0" Background="white" CornerRadius="30" Margin="30,30,0,30">
+        <Border Grid.Column="0" Background="white" CornerRadius="10" Margin="30,30,0,30">
             <StackPanel VerticalAlignment="Stretch" Margin="20" Height="Auto">
                 <!-- Logo + Titre -->
                 <StackPanel Margin="10,20,10,40" HorizontalAlignment="Center">
@@ -52,7 +52,7 @@
         </Border>
 
         <!-- Contenu principal avec coins arrondis à gauche -->
-        <Border Grid.Column="1" Background="White" Margin="30" CornerRadius="30,30,30,30">
+        <Border Grid.Column="1" Background="White" Margin="30" CornerRadius="10">
             <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"/>
         </Border>
     </Grid>

@@ -14,11 +14,13 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Net.Http;
 using MQTTnet.Client.Receiving;
+using SmartParking.Source.Modele;
 
 namespace SmartParking
 {
     public partial class VueDensemble : Page
     {
+        private const string Token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDIzMDg4NTEsImV4cCI6MTAxNzQyMzA4ODUxLCJkYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6IlNtYXJ0UGFya2luZyJ9fQ.B-dPPnoL4DnwsZ6_j6GRxs74Zn5XLQw-K8OjWIbegjk";
         private readonly string apiReservations = "https://smartparking.alwaysdata.net/getAllReservations";
         private readonly string apiDeleteReservation = "https://smartparking.alwaysdata.net/deleteReservation";
 
@@ -108,6 +110,7 @@ namespace SmartParking
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Add("Authorization", Token);
                     HttpResponseMessage response = await client.GetAsync(apiReservations);
                     if (response.IsSuccessStatusCode)
                     {
@@ -142,6 +145,7 @@ namespace SmartParking
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Add("Authorization", Token);
                     HttpResponseMessage deleteResponse = await client.DeleteAsync($"{apiDeleteReservation}/{reservationId}");
                     if (!deleteResponse.IsSuccessStatusCode)
                     {
@@ -159,30 +163,5 @@ namespace SmartParking
                 MessageBox.Show($"Erreur: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-    }
-
-    public class Reservation
-    {
-        public int IDReservation { get; set; }
-        public string DateReservation { get; set; }
-        public string TempsReservation { get; set; }
-        public string Immatriculation { get; set; }
-
-        public string DateReservationFormatted { get; set; }
-        public string TempsReservationFormatted { get; set; }
-
-        public ICommand DeleteCommand { get; set; }
-    }
-
-    public class RelayCommand : ICommand
-    {
-        private readonly Func<Task> _executeAsync;
-        public event EventHandler CanExecuteChanged;
-
-        public RelayCommand(Func<Task> executeAsync) => _executeAsync = executeAsync;
-
-        public bool CanExecute(object parameter) => true;
-
-        public async void Execute(object parameter) => await _executeAsync();
     }
 }
