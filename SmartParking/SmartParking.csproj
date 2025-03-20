@@ -11,6 +11,7 @@
   <ItemGroup>
     <None Remove="Source\Images\co2.png" />
     <None Remove="Source\Images\fond.png" />
+    <None Remove="Source\Images\fondadmi.png" />
     <None Remove="Source\Images\logosmart.png" />
     <None Remove="Source\Images\Smart.png" />
     <None Remove="Source\Images\sound.png" />
@@ -31,6 +32,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Source\Images\fond.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Source\Images\fondadmi.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

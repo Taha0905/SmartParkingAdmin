@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <!-- Titre aligné comme dans la page Aide -->
-        <Border Background="#2C3E50" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+        <Border Background="#2C3E50" CornerRadius="0" Padding="20" Margin="-20,0,-24,20">
             <TextBlock Text="🅿 Vue d'ensemble du Parking"
                        Foreground="White"
                        FontSize="40" FontWeight="Bold"
@@ -35,24 +35,24 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Places Occupées -->
-                <Border Grid.Column="0" Background="#FFEB83" CornerRadius="12" Padding="15" Margin="10" Opacity="0.7">
+                <Border Grid.Column="0" Background="#2C3E50" CornerRadius="0" Padding="15" Margin="10">
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TextOccupe" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
-                            <TextBlock Text=" /6 " FontSize="24" FontWeight="Bold" Foreground="Gray"/>
+                            <TextBlock x:Name="TextOccupe" Text="0" FontSize="24" FontWeight="Bold" Foreground="Red"/>
+                            <TextBlock Text=" /6 " FontSize="24" FontWeight="Bold" Foreground="White"/>
                         </StackPanel>
-                        <TextBlock Text="Places occupées" FontSize="14" Foreground="Gray" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Places occupées" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Places disponibles -->
-                <Border Grid.Column="1" Background="#FFEB83" CornerRadius="10" Padding="15" Margin="10" Opacity="0.7">
+                <Border Grid.Column="1" Background="#2C3E50" CornerRadius="0" Padding="15" Margin="10">
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TextLibre" Text="0" FontSize="24" FontWeight="Bold" Foreground="Black"/>
-                            <TextBlock Text=" /6" FontSize="24" FontWeight="Bold" Foreground="Gray"/>
+                            <TextBlock x:Name="TextLibre" Text="0" FontSize="24" FontWeight="Bold" Foreground="Green"/>
+                            <TextBlock Text=" /6" FontSize="24" FontWeight="Bold" Foreground="White"/>
                         </StackPanel>
-                        <TextBlock Text="Places disponibles" FontSize="14" Foreground="Gray" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Places disponibles" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -74,7 +74,7 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="White" CornerRadius="10" Padding="15" Margin="5"
-                                            BorderBrush="#FFD966" BorderThickness="2">
+                                            BorderBrush="#2C3E50" BorderThickness="2">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*"/>

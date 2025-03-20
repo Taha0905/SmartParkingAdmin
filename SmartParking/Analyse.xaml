@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <!-- Titre placé au même endroit que celui de la page Aide -->
-        <Border Background="#2C3E50" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+        <Border Background="#2C3E50" CornerRadius="0" Padding="20" Margin="-21,0,-20,20">
             <TextBlock Text="🅿 État du Parking" 
                        Foreground="White"
                        FontSize="40" FontWeight="Bold"

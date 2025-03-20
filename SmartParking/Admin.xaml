@@ -5,55 +5,61 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
-      Title="Admin" Background="#FFEB83">
+      Title="Admin">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <!-- Barre latérale -->
-            <ColumnDefinition Width="*"/>
-            <!-- Contenu principal -->
-        </Grid.ColumnDefinitions>
+    <Grid Background="#FFF">
+        <!-- Image en arrière-plan -->
+        <Image Source="Source/Images/fondadmi.png" Stretch="Fill" Grid.ColumnSpan="2"/>
 
-        <!-- Barre latérale gauche -->
-        <Border Grid.Column="0" Background="white" CornerRadius="30" Margin="30,30,0,30">
-            <StackPanel VerticalAlignment="Stretch" Margin="20" Height="Auto">
-                <!-- Logo + Titre -->
-                <StackPanel Margin="10,20,10,40" HorizontalAlignment="Center">
-                    <TextBlock Text="Smart Parking Admin" FontSize="20" FontWeight="Bold" Foreground="Black" TextAlignment="Center"/>
+        <!-- Conteneur principal -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <!-- Barre latérale -->
+                <ColumnDefinition Width="*"/>
+                <!-- Contenu principal -->
+            </Grid.ColumnDefinitions>
 
-                    <!-- Image du logo -->
-                    <Image Source="Source/Images/Smart.png" Width="120" Height="120" Stretch="Uniform" Margin="0,10,0,0"/>
+            <!-- Barre latérale gauche -->
+            <Border Grid.Column="0" Background="#F5F5F5" CornerRadius="0" Margin="30,30,0,30" Panel.ZIndex="1"  >
+                <StackPanel VerticalAlignment="Stretch" Margin="20" Height="Auto">
+                    <!-- Logo + Titre -->
+                    <StackPanel Margin="10,20,10,40" HorizontalAlignment="Center">
+                        <TextBlock Text="Smart Parking Admin" FontSize="20" FontWeight="Bold" Foreground="Black" TextAlignment="Center"/>
+
+                        <!-- Image du logo -->
+                        <Image Source="Source/Images/Smart.png" Width="120" Height="120" Stretch="Uniform" Margin="0,10,0,0"/>
+                    </StackPanel>
+
+                    <!-- Menu items -->
+                    <StackPanel>
+                        <TextBlock Text="Menu" FontSize="20" FontWeight="Bold" Foreground="Black" Margin="0,0,0,10"/>
+
+                        <Button Content="Vue d'ensemble" Background="Transparent" Foreground="Black" FontSize="18"
+                                BorderThickness="0" Padding="10,5" Click="VueDensembleButton_Click" HorizontalAlignment="Left"/>
+
+                        <Button Content="Analyse" Background="Transparent" Foreground="Black" FontSize="18"
+                                BorderThickness="0" Padding="10,5" Click="AnalyseButton_Click" HorizontalAlignment="Left"/>
+
+                        <Button Content="Caméra" Background="Transparent" Foreground="Black" FontSize="18"
+                                BorderThickness="0" Padding="10,5" Click="CameraButton_Click" HorizontalAlignment="Left"/>
+
+                        <Button Content="Aide" Background="Transparent" Foreground="Black" FontSize="18"
+                                BorderThickness="0" Padding="10,5" HorizontalAlignment="Left" Click="AideButton_Click"/>
+                    </StackPanel>
+
+                    <!-- Bouton Déconnexion en bas avec le même style que les autres -->
+                    <StackPanel VerticalAlignment="Bottom" Margin="0,500,0,0">
+                        <Button Content="Déconnexion" Background="Transparent" Foreground="Black" FontSize="18"
+                                BorderThickness="0" Padding="10,5" Click="LogoutButton_Click" HorizontalAlignment="Left"/>
+                    </StackPanel>
                 </StackPanel>
+            </Border>
 
-                <!-- Menu items -->
-                <StackPanel>
-                    <TextBlock Text="Menu" FontSize="20" FontWeight="Bold" Foreground="Black" Margin="0,0,0,10"/>
-
-                    <Button Content="Vue d'ensemble" Background="Transparent" Foreground="Black" FontSize="18"
-                            BorderThickness="0" Padding="10,5" Click="VueDensembleButton_Click" HorizontalAlignment="Left"/>
-
-                    <Button Content="Analyse" Background="Transparent" Foreground="Black" FontSize="18"
-                            BorderThickness="0" Padding="10,5" Click="AnalyseButton_Click" HorizontalAlignment="Left"/>
-
-                    <Button Content="Caméra" Background="Transparent" Foreground="Black" FontSize="18"
-                            BorderThickness="0" Padding="10,5" Click="CameraButton_Click" HorizontalAlignment="Left"/>
-
-                    <Button Content="Aide" Background="Transparent" Foreground="Black" FontSize="18"
-                            BorderThickness="0" Padding="10,5" HorizontalAlignment="Left" Click="AideButton_Click"/>
-                </StackPanel>
-
-                <!-- Bouton Déconnexion en bas avec le même style que les autres -->
-                <StackPanel VerticalAlignment="Bottom" Margin="0,500,0,0">
-                    <Button Content="Déconnexion" Background="Transparent" Foreground="Black" FontSize="18"
-                            BorderThickness="0" Padding="10,5" Click="LogoutButton_Click" HorizontalAlignment="Left"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
-
-        <!-- Contenu principal avec coins arrondis à gauche -->
-        <Border Grid.Column="1" Background="White" Margin="30" CornerRadius="30,30,30,30">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"/>
-        </Border>
+            <!-- Contenu principal avec coins arrondis à gauche -->
+            <Border Grid.Column="1" Background="White" Margin="30" CornerRadius="0" Panel.ZIndex="1">
+                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"/>
+            </Border>
+        </Grid>
     </Grid>
 </Page>
