@@ -1,0 +1,54 @@
+﻿<Page x:Class="SmartParking.Admin"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignHeight="1080" d:DesignWidth="1920"
+      Title="Admin">
+
+    <Grid Background="#1E1E1E">
+
+
+        <!-- Conteneur principal -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <!-- Sidebar -->
+                <ColumnDefinition Width="*"/>
+                <!-- Contenu principal -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar -->
+            <Border Grid.Column="0" Background="#2B2B2B" Margin="30,30,10,30" CornerRadius="10" Panel.ZIndex="1">
+                <StackPanel VerticalAlignment="Stretch" Margin="20">
+                    <!-- Titre + Logo -->
+                    <StackPanel Margin="0,20,0,40" HorizontalAlignment="Center">
+                        <TextBlock Text="Smart Parking Admin" FontSize="20" Foreground="White" FontWeight="Bold" TextAlignment="Center"/>
+                        <Image Source="/Source/Images/dossier3.png" Width="100" Height="100" Margin="0,10,0,0"/>
+                    </StackPanel>
+
+                    <!-- Menu -->
+                    <StackPanel>
+                        <TextBlock Text="Menu" FontSize="16" Foreground="LightGray" Margin="0,0,0,10"/>
+
+                        <Button Content="Vue d'ensemble" Style="{StaticResource SideMenuButtonStyle}" Click="VueDensembleButton_Click"/>
+                        <Button Content="Analyse" Style="{StaticResource SideMenuButtonStyle}" Click="AnalyseButton_Click"/>
+                        <Button Content="Caméra" Style="{StaticResource SideMenuButtonStyle}" Click="CameraButton_Click"/>
+                        <Button Content="Aide" Style="{StaticResource SideMenuButtonStyle}" Click="AideButton_Click"/>
+                    </StackPanel>
+
+                    <!-- Déconnexion -->
+                    <StackPanel VerticalAlignment="Bottom" Margin="0,100,0,0">
+                        <Button Content="Déconnexion" Style="{StaticResource SideMenuButtonStyle}" Click="LogoutButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Contenu principal -->
+            <Border Grid.Column="1" Background="#F5F5F5" Margin="10,30,30,30" CornerRadius="10" Panel.ZIndex="1">
+                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

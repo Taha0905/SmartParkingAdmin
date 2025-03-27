@@ -1,0 +1,89 @@
+﻿<Page x:Class="SmartParking.Aide"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d" 
+      Title="Aide" Background="#1E1E1E" d:DesignHeight="1040" d:DesignWidth="1500">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Titre -->
+        <Border Background="#2B2B2B" CornerRadius="10" Padding="20" Margin="-20,0,-20,20">
+            <TextBlock Text="❓ Aide et Assistance" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" />
+        </Border>
+
+        <!-- Contenu -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Colonne de gauche -->
+            <StackPanel Grid.Column="0" Margin="20" VerticalAlignment="Top">
+                <TextBlock Text="📞 Numéros d'Urgence" FontSize="26" FontWeight="Bold" Foreground="White" />
+                <Separator Margin="0,5,0,10" Background="#444"/>
+
+                <StackPanel Margin="10,0">
+                    <TextBlock Text="🚔 Police : 17" FontSize="20" Foreground="#DDDDDD" Margin="5" />
+                    <TextBlock Text="🚒 Pompiers : 18" FontSize="20" Foreground="#DDDDDD" Margin="5" />
+                    <TextBlock Text="🚑 SAMU : 15" FontSize="20" Foreground="#DDDDDD" Margin="5" />
+                    <TextBlock Text="📞 Urgence Européenne : 112" FontSize="20" Foreground="#DDDDDD" Margin="5" />
+                    <TextBlock Text="🆘 Urgence sourds/muets : 114" FontSize="20" Foreground="#DDDDDD" Margin="5,5,5,15" />
+                </StackPanel>
+
+                <!-- Spacer pour alignement -->
+                <Border Height="60" Background="Transparent"/>
+
+                <TextBlock Text="🔧 Assistance Technique" FontSize="26" FontWeight="Bold" Foreground="White" />
+                <Separator Margin="0,5,0,10" Background="#444"/>
+
+                <StackPanel Margin="10,0">
+                    <TextBlock Text="📧 support@smartparking.com" FontSize="20" Foreground="#DDDDDD" Margin="5" />
+                    <TextBlock Text="📞 01 23 45 67 89" FontSize="20" Foreground="#DDDDDD" Margin="5" />
+                    <TextBlock Text="📅 Lundi au Vendredi : 9h à 18h" FontSize="20" Foreground="#DDDDDD" Margin="5,5,5,15" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Colonne de droite -->
+            <StackPanel Grid.Column="1" Margin="20" VerticalAlignment="Top">
+                <TextBlock Text="⚠ Procédures en cas de problème" FontSize="26" FontWeight="Bold" Foreground="White" />
+                <Separator Margin="0,5,0,10" Background="#444"/>
+
+                <StackPanel Margin="10,0">
+                    <TextBlock Text="✅ Redémarrer le routeur si problème réseau." FontSize="20" Foreground="#DDDDDD" Margin="5" TextWrapping="Wrap" />
+                    <TextBlock Text="✅ Vérifier alimentation caméra défectueuse." FontSize="20" Foreground="#DDDDDD" Margin="5" TextWrapping="Wrap" />
+                    <TextBlock Text="✅ Rafraîchir l'app si réservation absente." FontSize="20" Foreground="#DDDDDD" Margin="5" TextWrapping="Wrap" />
+                    <TextBlock Text="✅ Contacter support pour autres problèmes." FontSize="20" Foreground="#DDDDDD" Margin="5,5,5,15" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- Spacer pour garder l’alignement -->
+                <Border Height="97" Background="Transparent"/>
+
+                <TextBlock Text="📜 Documentation et Guides" FontSize="26" FontWeight="Bold" Foreground="White" />
+                <Separator Margin="0,5,0,10" Background="#444"/>
+
+                <StackPanel Margin="10,0">
+                    <TextBlock FontSize="20" Foreground="#DDDDDD" Margin="5">
+            📖 
+            <Hyperlink NavigateUri="https://smartparking.com/docs" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#4FC3F7">
+                Documentation en ligne
+            </Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock FontSize="20" Foreground="#DDDDDD" Margin="5">
+            ❓
+            <Hyperlink NavigateUri="https://smartparking.com/faq" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#4FC3F7">
+                Foire Aux Questions (FAQ)
+            </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

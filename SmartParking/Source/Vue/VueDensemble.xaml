@@ -3,25 +3,22 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:SmartParking"
       mc:Ignorable="d"
       d:DesignHeight="1040" d:DesignWidth="1500"
       Title="Vue d'ensemble du Parking"
-      Background="#F5F5F5">
+      Background="#1E1E1E">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Titre -->
             <RowDefinition Height="*"/>
-            <!-- Contenu principal -->
         </Grid.RowDefinitions>
 
-        <!-- Titre aligné comme dans la page Aide -->
-        <Border Background="#2C3E50" CornerRadius="0" Padding="20" Margin="-20,0,-24,20">
+        <!-- Titre -->
+        <Border Background="#2B2B2B" Padding="20" Margin="-21,0,-20,20" CornerRadius="10">
             <TextBlock Text="🅿 Vue d'ensemble du Parking"
                        Foreground="White"
-                       FontSize="40" FontWeight="Bold"
+                       FontSize="32" FontWeight="Bold"
                        HorizontalAlignment="Center"/>
         </Border>
 
@@ -35,32 +32,32 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Places Occupées -->
-                <Border Grid.Column="0" Background="#2C3E50" CornerRadius="0" Padding="15" Margin="10">
+                <Border Grid.Column="0" Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="10">
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TextOccupe" Text="0" FontSize="24" FontWeight="Bold" Foreground="Red"/>
-                            <TextBlock Text=" /6 " FontSize="24" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock x:Name="TextOccupe" Text="0" FontSize="28" FontWeight="Bold" Foreground="Red"/>
+                            <TextBlock Text=" /6 " FontSize="28" FontWeight="Bold" Foreground="White"/>
                         </StackPanel>
-                        <TextBlock Text="Places occupées" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Places occupées" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Places disponibles -->
-                <Border Grid.Column="1" Background="#2C3E50" CornerRadius="0" Padding="15" Margin="10">
+                <!-- Places Disponibles -->
+                <Border Grid.Column="1" Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="10">
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TextLibre" Text="0" FontSize="24" FontWeight="Bold" Foreground="Green"/>
-                            <TextBlock Text=" /6" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock x:Name="TextLibre" Text="0" FontSize="28" FontWeight="Bold" Foreground="LimeGreen"/>
+                            <TextBlock Text=" /6" FontSize="28" FontWeight="Bold" Foreground="White"/>
                         </StackPanel>
-                        <TextBlock Text="Places disponibles" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Places disponibles" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
             <!-- Liste des réservations -->
-            <Border Background="White" CornerRadius="15" Padding="20">
+            <Border Background="#2B2B2B" CornerRadius="10" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="📌 Liste des Réservations" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <TextBlock Text="📌 Liste des Réservations" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto" Height="600">
                         <ListView x:Name="ListViewReservations" ItemsSource="{Binding Reservations}" 
@@ -73,8 +70,8 @@
 
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="White" CornerRadius="10" Padding="15" Margin="5"
-                                            BorderBrush="#2C3E50" BorderThickness="2">
+                                    <Border Background="#1E1E1E" CornerRadius="10" Padding="15" Margin="5"
+                                            BorderBrush="#3C3C3C" BorderThickness="2">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*"/>
@@ -84,28 +81,28 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- ID de la réservation -->
+                                            <!-- ID -->
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="Réservation #" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding IDReservation}" FontSize="16" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding IDReservation}" FontSize="16" FontWeight="Bold" Foreground="White"/>
                                             </StackPanel>
 
                                             <!-- Date -->
                                             <StackPanel Grid.Column="1">
                                                 <TextBlock Text="📅 Date" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding DateReservationFormatted}" FontSize="16" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding DateReservationFormatted}" FontSize="16" FontWeight="Bold" Foreground="White"/>
                                             </StackPanel>
 
                                             <!-- Durée -->
                                             <StackPanel Grid.Column="2">
                                                 <TextBlock Text="⏳ Durée" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding TempsReservationFormatted}" FontSize="16" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding TempsReservationFormatted}" FontSize="16" FontWeight="Bold" Foreground="White"/>
                                             </StackPanel>
 
                                             <!-- Immatriculation -->
                                             <StackPanel Grid.Column="3">
                                                 <TextBlock Text="🚗 Immatriculation" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding Immatriculation}" FontSize="16" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Immatriculation}" FontSize="16" FontWeight="Bold" Foreground="White"/>
                                             </StackPanel>
 
                                             <!-- Bouton Supprimer -->

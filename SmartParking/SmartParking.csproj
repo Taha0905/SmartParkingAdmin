@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Remove="Source\Images\co2.png" />
+    <None Remove="Source\Images\dossier2.png" />
+    <None Remove="Source\Images\dossier3.png" />
     <None Remove="Source\Images\fond.png" />
     <None Remove="Source\Images\fondadmi.png" />
     <None Remove="Source\Images\logosmart.png" />
@@ -29,6 +31,9 @@
 
   <ItemGroup>
     <Content Include="Source\Images\co2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Source\Images\dossier3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Source\Images\fond.png">
@@ -53,6 +58,16 @@
 
   <ItemGroup>
     <Content Include="Source\Images\temperature.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Source\VueModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Source\Images\dossier2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
