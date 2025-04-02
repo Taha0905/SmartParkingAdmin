@@ -4,7 +4,7 @@
         Title="Connexion" Height="600" Width="1000" WindowStartupLocation="CenterScreen"
         Background="#FFEB83" WindowStyle="None" ResizeMode="NoResize">
     <Grid>
-        <!-- Image de fond -->
+        <!-- Image de fond  -->
         <Image Source="/Source/Images/fond.png" Stretch="UniformToFill" Margin="20,20,20,20" />
 
         <!-- Croix en haut à droite -->

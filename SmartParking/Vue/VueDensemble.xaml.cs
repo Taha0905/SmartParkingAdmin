@@ -12,8 +12,8 @@ using MQTTnet.Client.Options;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Net.Http;
-using SmartParking.Source.Modele;
 using MQTTnet.Client.Receiving;
+using SmartParking.Model;
 
 namespace SmartParking
 {

@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Source\VueModel\**" />
+    <EmbeddedResource Remove="Source\VueModel\**" />
+    <None Remove="Source\VueModel\**" />
+    <Page Remove="Source\VueModel\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Source\Images\co2.png" />
     <None Remove="Source\Images\dossier2.png" />
     <None Remove="Source\Images\dossier3.png" />
@@ -60,10 +67,6 @@
     <Content Include="Source\Images\temperature.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Source\VueModel\" />
   </ItemGroup>
 
   <ItemGroup>
