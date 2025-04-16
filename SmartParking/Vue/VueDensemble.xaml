@@ -3,121 +3,259 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
       d:DesignHeight="1040" d:DesignWidth="1500"
-      Title="Vue d'ensemble du Parking"
-      Background="#1E1E1E">
+      Title="Vue d'ensemble du Parking">
 
-    <Grid Margin="20">
+    <Page.Resources>
+        <Style x:Key="StatCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#2E3A59"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="5" Opacity="0.15" Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StatNumberStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="StatLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+
+        <Style x:Key="ReservationCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#2E3A59"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="5" Opacity="0.15" Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DeleteButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F56565"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E53E3E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
+        </Style>
+
+        <Style x:Key="FieldValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1A1E2C" Offset="0"/>
+                <GradientStop Color="#121420" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Titre -->
-        <Border Background="#2B2B2B" Padding="20" Margin="-21,0,-20,20" CornerRadius="10">
-            <TextBlock Text="🅿 Vue d'ensemble du Parking"
-                       Foreground="White"
-                       FontSize="32" FontWeight="Bold"
-                       HorizontalAlignment="Center"/>
+        <!-- En-tête -->
+        <Border Grid.Row="0" Background="#252A41" Padding="20" Margin="0,0,0,20">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <material:PackIcon Kind="Parking" Width="32" Height="32" Foreground="#4FD1C5" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <TextBlock Text="VUE D'ENSEMBLE DU PARKING" 
+                               Foreground="White"
+                               FontSize="24" FontWeight="SemiBold"
+                               VerticalAlignment="Center">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="1" BlurRadius="2" Opacity="0.2" Color="Black"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+
+                <TextBlock Text="Mise à jour en temps réel" Foreground="#4FD1C5" FontSize="14" 
+                           HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </Grid>
         </Border>
 
         <!-- Contenu principal -->
-        <StackPanel Grid.Row="1">
+        <Grid Grid.Row="1" Margin="20,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
             <!-- Cartes de statistiques -->
-            <Grid Margin="0,0,0,20">
+            <Grid Grid.Row="0" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Places Occupées -->
-                <Border Grid.Column="0" Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="10">
-                    <StackPanel HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TextOccupe" Text="0" FontSize="28" FontWeight="Bold" Foreground="Red"/>
-                            <TextBlock Text=" /6 " FontSize="28" FontWeight="Bold" Foreground="White"/>
+                <Border Grid.Column="0" Style="{StaticResource StatCardStyle}" Grid.ColumnSpan="2" Margin="0,10,10,10">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock x:Name="TextOccupe" Text="0" Style="{StaticResource StatNumberStyle}" Foreground="#F56565"/>
+                            <TextBlock Text="/" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568" Margin="5,0"/>
+                            <TextBlock Text="6" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568"/>
                         </StackPanel>
-                        <TextBlock Text="Places occupées" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Places occupées" Style="{StaticResource StatLabelStyle}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Places Disponibles -->
-                <Border Grid.Column="1" Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="10">
-                    <StackPanel HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TextLibre" Text="0" FontSize="28" FontWeight="Bold" Foreground="LimeGreen"/>
-                            <TextBlock Text=" /6" FontSize="28" FontWeight="Bold" Foreground="White"/>
+                <Border Grid.Column="2" Style="{StaticResource StatCardStyle}" Grid.ColumnSpan="2" Margin="10,10,0,10">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock x:Name="TextLibre" Text="0" Style="{StaticResource StatNumberStyle}" Foreground="#48BB78"/>
+                            <TextBlock Text="/" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568" Margin="5,0"/>
+                            <TextBlock Text="6" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568"/>
                         </StackPanel>
-                        <TextBlock Text="Places disponibles" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Places disponibles" Style="{StaticResource StatLabelStyle}"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
             <!-- Liste des réservations -->
-            <Border Background="#2B2B2B" CornerRadius="10" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="📌 Liste des Réservations" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+            <Border Grid.Row="1" Background="#2E3A59" CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="600">
-                        <ListView x:Name="ListViewReservations" ItemsSource="{Binding Reservations}" 
-                                  Background="Transparent" HorizontalAlignment="Stretch">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
+                    <!-- En-tête de la liste -->
+                    <Grid Grid.Row="0" Margin="0,0,0,15">
+                        <TextBlock Text="Liste des Réservations" Style="{StaticResource SectionTitleStyle}"/>
+                        <Border Background="#4FD1C5" Height="2" Width="60" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,30,0,0"/>
+                    </Grid>
 
-                            <ListView.ItemTemplate>
+                    <!-- Liste des réservations -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="ListViewReservations" ItemsSource="{Binding Reservations}">
+                            <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#1E1E1E" CornerRadius="10" Padding="15" Margin="5"
-                                            BorderBrush="#3C3C3C" BorderThickness="2">
+                                    <Border Style="{StaticResource ReservationCardStyle}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="1*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="0.8*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- ID -->
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="Réservation #" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding IDReservation}" FontSize="16" FontWeight="Bold" Foreground="White"/>
-                                            </StackPanel>
+                                            <!-- ID Réservation -->
+                                            <Border Grid.Column="0" Background="#1E293B" CornerRadius="4" Padding="12" Margin="0,0,10,0">
+                                                <StackPanel>
+                                                    <TextBlock Text="Réservation #" Style="{StaticResource FieldLabelStyle}"/>
+                                                    <TextBlock Text="{Binding IDReservation}" Style="{StaticResource FieldValueStyle}"/>
+                                                </StackPanel>
+                                            </Border>
 
                                             <!-- Date -->
-                                            <StackPanel Grid.Column="1">
-                                                <TextBlock Text="📅 Date" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding DateReservationFormatted}" FontSize="16" FontWeight="Bold" Foreground="White"/>
-                                            </StackPanel>
+                                            <Border Grid.Column="1" Background="#1E293B" CornerRadius="4" Padding="12" Margin="0,0,10,0">
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                                        <material:PackIcon Kind="Calendar" Width="14" Height="14" Foreground="#A0AEC0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="Date" Style="{StaticResource FieldLabelStyle}"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding DateReservationFormatted}" Style="{StaticResource FieldValueStyle}"/>
+                                                </StackPanel>
+                                            </Border>
 
                                             <!-- Durée -->
-                                            <StackPanel Grid.Column="2">
-                                                <TextBlock Text="⏳ Durée" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding TempsReservationFormatted}" FontSize="16" FontWeight="Bold" Foreground="White"/>
-                                            </StackPanel>
+                                            <Border Grid.Column="2" Background="#1E293B" CornerRadius="4" Padding="12" Margin="0,0,10,0">
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                                        <material:PackIcon Kind="Clock" Width="14" Height="14" Foreground="#A0AEC0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="Durée" Style="{StaticResource FieldLabelStyle}"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding TempsReservationFormatted}" Style="{StaticResource FieldValueStyle}"/>
+                                                </StackPanel>
+                                            </Border>
 
                                             <!-- Immatriculation -->
-                                            <StackPanel Grid.Column="3">
-                                                <TextBlock Text="🚗 Immatriculation" FontSize="12" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding Immatriculation}" FontSize="16" FontWeight="Bold" Foreground="White"/>
-                                            </StackPanel>
+                                            <Border Grid.Column="3" Background="#1E293B" CornerRadius="4" Padding="12" Margin="0,0,10,0">
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                                        <material:PackIcon Kind="Car" Width="14" Height="14" Foreground="#A0AEC0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="Immatriculation" Style="{StaticResource FieldLabelStyle}"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding Immatriculation}" Style="{StaticResource FieldValueStyle}"/>
+                                                </StackPanel>
+                                            </Border>
 
                                             <!-- Bouton Supprimer -->
-                                            <Button Grid.Column="4" Content="✖" Width="40" Height="40"
-                                                    Background="#FF6F6F" Foreground="White" FontSize="16"
+                                            <Button Grid.Column="4" Content="✖" Style="{StaticResource DeleteButtonStyle}"
                                                     Command="{Binding DeleteCommand}"
-                                                    HorizontalAlignment="Right"/>
+                                                    VerticalAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </ScrollViewer>
-                </StackPanel>
+                </Grid>
             </Border>
-        </StackPanel>
+        </Grid>
+
+        <!-- Pied de page -->
+        <!-- Pied de page -->
+        <Border Grid.Row="2" Background="#252A41" Padding="15" Margin="0,20,0,0">
+            <Grid>
+                <TextBlock Text="© 2025 Smart Parking System" Foreground="#A0AEC0" 
+                   FontSize="14" HorizontalAlignment="Left"/>
+                <TextBlock Text="Version 2.5.1" Foreground="#A0AEC0" 
+                   FontSize="14" HorizontalAlignment="Right"/>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

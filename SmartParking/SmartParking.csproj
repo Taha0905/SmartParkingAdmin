@@ -20,6 +20,7 @@
     <None Remove="Source\Images\dossier2.png" />
     <None Remove="Source\Images\dossier3.png" />
     <None Remove="Source\Images\fond.png" />
+    <None Remove="Source\Images\fond1.png" />
     <None Remove="Source\Images\fondadmi.png" />
     <None Remove="Source\Images\logosmart.png" />
     <None Remove="Source\Images\Smart.png" />
@@ -28,12 +29,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="M2Mqtt" Version="4.3.0" />
-    <PackageReference Include="M2MqttClientDotnetCore" Version="1.0.1" />
+    <PackageReference Include="AForge.Video" Version="2.2.5" />
+    <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
     <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="MQTTnet" Version="3.0.16" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +46,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Source\Images\fond.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Source\Images\fond1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Source\Images\fondadmi.png">
@@ -73,6 +78,10 @@
     <Content Include="Source\Images\dossier2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Source\Enregistrement\" />
   </ItemGroup>
 
 </Project>

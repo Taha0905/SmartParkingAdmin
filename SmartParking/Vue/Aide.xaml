@@ -3,87 +3,311 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      Title="Aide" Background="#1E1E1E" d:DesignHeight="1040" d:DesignWidth="1500">
+      Title="Aide" d:DesignHeight="1040" d:DesignWidth="1500">
 
-    <Grid Margin="20">
+    <Page.Resources>
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="SectionContentStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#2E3A59"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="25"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="15" Opacity="0.2" Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SeparatorStyle" TargetType="Separator">
+            <Setter Property="Background" Value="#4A5568"/>
+            <Setter Property="Margin" Value="0,5,0,15"/>
+            <Setter Property="Height" Value="1"/>
+        </Style>
+
+        <Style x:Key="HyperlinkStyle" TargetType="Hyperlink">
+            <Setter Property="Foreground" Value="#4FD1C5"/>
+            <Setter Property="TextDecorations" Value="None"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#81E6D9"/>
+                    <Setter Property="TextDecorations" Value="Underline"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1A1E2C" Offset="0"/>
+                <GradientStop Color="#121420" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Titre -->
-        <Border Background="#2B2B2B" CornerRadius="10" Padding="20" Margin="-20,0,-20,20">
-            <TextBlock Text="❓ Aide et Assistance" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" />
+        <!-- En-tête standardisé -->
+        <Border Grid.Row="0" Background="#252A41" Padding="20" Margin="0,0,0,20">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <!-- Icône -->
+                    <material:PackIcon Kind="HelpCircle" Width="32" Height="32" Foreground="#4FD1C5" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <!-- Titre -->
+                    <TextBlock Text="AIDE ET ASSISTANCE" 
+                       Foreground="White"
+                       FontSize="24" FontWeight="SemiBold"
+                       VerticalAlignment="Center">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="1" BlurRadius="2" Opacity="0.2" Color="Black"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
         </Border>
 
-        <!-- Contenu -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*" />
-                <ColumnDefinition Width="0.5*" />
-            </Grid.ColumnDefinitions>
+        <!-- Contenu principal -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Colonne de gauche -->
-            <StackPanel Grid.Column="0" Margin="20" VerticalAlignment="Top">
-                <TextBlock Text="📞 Numéros d'Urgence" FontSize="26" FontWeight="Bold" Foreground="White" />
-                <Separator Margin="0,5,0,10" Background="#444"/>
+                <!-- Colonne de gauche -->
+                <StackPanel Grid.Column="0" Margin="10">
+                    <!-- Numéros d'urgence -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <material:PackIcon Kind="PhoneAlert" Width="28" Height="28" Foreground="#F56565" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Numéros d'Urgence" Style="{StaticResource SectionTitleStyle}"/>
+                                </StackPanel>
+                                <Border Background="#F56565" CornerRadius="4" Width="80" Height="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,40,0,0"/>
+                            </Grid>
 
-                <StackPanel Margin="10,0">
-                    <TextBlock Text="🚔 Police : 17" FontSize="20" Foreground="#DDDDDD" Margin="5" />
-                    <TextBlock Text="🚒 Pompiers : 18" FontSize="20" Foreground="#DDDDDD" Margin="5" />
-                    <TextBlock Text="🚑 SAMU : 15" FontSize="20" Foreground="#DDDDDD" Margin="5" />
-                    <TextBlock Text="📞 Urgence Européenne : 112" FontSize="20" Foreground="#DDDDDD" Margin="5" />
-                    <TextBlock Text="🆘 Urgence sourds/muets : 114" FontSize="20" Foreground="#DDDDDD" Margin="5,5,5,15" />
+                            <Separator Style="{StaticResource SeparatorStyle}"/>
+
+                            <Grid Margin="10,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon  Width="24" Height="24" Foreground="#F56565" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="Police : 17" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="1" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="FireTruck" Width="24" Height="24" Foreground="#F56565" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Pompiers : 18" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="2" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Ambulance" Width="24" Height="24" Foreground="#F56565" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="SAMU : 15" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="3" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Phone" Width="24" Height="24" Foreground="#F56565" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="Urgence Européenne : 112" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="4" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="AlertCircle" Width="24" Height="24" Foreground="#F56565" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Text="Urgence sourds/muets : 114" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Assistance technique -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <material:PackIcon Kind="Tools" Width="28" Height="28" Foreground="#4299E1" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Assistance Technique" Style="{StaticResource SectionTitleStyle}"/>
+                                </StackPanel>
+                                <Border Background="#4299E1" CornerRadius="4" Width="80" Height="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,40,0,0"/>
+                            </Grid>
+
+                            <Separator Style="{StaticResource SeparatorStyle}"/>
+
+                            <Grid Margin="10,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Email" Width="24" Height="24" Foreground="#4299E1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="support@smartparking.com" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="1" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Phone" Width="24" Height="24" Foreground="#4299E1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="01 23 45 67 89" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="2" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Calendar" Width="24" Height="24" Foreground="#4299E1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="Lundi au Vendredi : 9h à 18h" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
-                <!-- Spacer pour alignement -->
-                <Border Height="60" Background="Transparent"/>
+                <!-- Colonne de droite -->
+                <StackPanel Grid.Column="1" Margin="10">
+                    <!-- Procédures en cas de problème -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <material:PackIcon Kind="AlertCircleOutline" Width="28" Height="28" Foreground="#ED8936" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Procédures en cas de problème" Style="{StaticResource SectionTitleStyle}"/>
+                                </StackPanel>
+                                <Border Background="#ED8936" CornerRadius="4" Width="80" Height="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,40,0,0"/>
+                            </Grid>
 
-                <TextBlock Text="🔧 Assistance Technique" FontSize="26" FontWeight="Bold" Foreground="White" />
-                <Separator Margin="0,5,0,10" Background="#444"/>
+                            <Separator Style="{StaticResource SeparatorStyle}"/>
 
-                <StackPanel Margin="10,0">
-                    <TextBlock Text="📧 support@smartparking.com" FontSize="20" Foreground="#DDDDDD" Margin="5" />
-                    <TextBlock Text="📞 01 23 45 67 89" FontSize="20" Foreground="#DDDDDD" Margin="5" />
-                    <TextBlock Text="📅 Lundi au Vendredi : 9h à 18h" FontSize="20" Foreground="#DDDDDD" Margin="5,5,5,15" />
+                            <Grid Margin="10,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Wifi" Width="24" Height="24" Foreground="#ED8936" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="Redémarrer le routeur si problème réseau." Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="1" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Cctv" Width="24" Height="24" Foreground="#ED8936" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Vérifier alimentation caméra défectueuse." Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="2" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Refresh" Width="24" Height="24" Foreground="#ED8936" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="Rafraîchir l'app si réservation absente." Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+
+                                <Border Grid.Row="3" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="HeadsetMic" Width="24" Height="24" Foreground="#ED8936" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="Contacter support pour autres problèmes." Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Documentation et Guides -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <material:PackIcon Kind="FileDocument" Width="28" Height="28" Foreground="#4FD1C5" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Documentation et Guides" Style="{StaticResource SectionTitleStyle}"/>
+                                </StackPanel>
+                                <Border Background="#4FD1C5" CornerRadius="4" Width="80" Height="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,40,0,0"/>
+                            </Grid>
+
+                            <Separator Style="{StaticResource SeparatorStyle}"/>
+
+                            <Grid Margin="10,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="BookOpen" Width="24" Height="24" Foreground="#4FD1C5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://smartparking.com/docs" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
+                                        Documentation en ligne
+                                    </Hyperlink>
+                                </TextBlock>
+
+                                <Border Grid.Row="1" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="HelpCircleOutline" Width="24" Height="24" Foreground="#4FD1C5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://smartparking.com/faq" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
+                                        Foire Aux Questions (FAQ)
+                                    </Hyperlink>
+                                </TextBlock>
+
+                                <Border Grid.Row="2" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
+                                    <material:PackIcon Kind="Video" Width="24" Height="24" Foreground="#4FD1C5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://smartparking.com/tutorials" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
+                                        Tutoriels vidéo
+                                    </Hyperlink>
+                                </TextBlock>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-            </StackPanel>
+            </Grid>
+        </ScrollViewer>
 
-            <!-- Colonne de droite -->
-            <StackPanel Grid.Column="1" Margin="20" VerticalAlignment="Top">
-                <TextBlock Text="⚠ Procédures en cas de problème" FontSize="26" FontWeight="Bold" Foreground="White" />
-                <Separator Margin="0,5,0,10" Background="#444"/>
-
-                <StackPanel Margin="10,0">
-                    <TextBlock Text="✅ Redémarrer le routeur si problème réseau." FontSize="20" Foreground="#DDDDDD" Margin="5" TextWrapping="Wrap" />
-                    <TextBlock Text="✅ Vérifier alimentation caméra défectueuse." FontSize="20" Foreground="#DDDDDD" Margin="5" TextWrapping="Wrap" />
-                    <TextBlock Text="✅ Rafraîchir l'app si réservation absente." FontSize="20" Foreground="#DDDDDD" Margin="5" TextWrapping="Wrap" />
-                    <TextBlock Text="✅ Contacter support pour autres problèmes." FontSize="20" Foreground="#DDDDDD" Margin="5,5,5,15" TextWrapping="Wrap" />
-                </StackPanel>
-
-                <!-- Spacer pour garder l’alignement -->
-                <Border Height="97" Background="Transparent"/>
-
-                <TextBlock Text="📜 Documentation et Guides" FontSize="26" FontWeight="Bold" Foreground="White" />
-                <Separator Margin="0,5,0,10" Background="#444"/>
-
-                <StackPanel Margin="10,0">
-                    <TextBlock FontSize="20" Foreground="#DDDDDD" Margin="5">
-            📖 
-            <Hyperlink NavigateUri="https://smartparking.com/docs" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#4FC3F7">
-                Documentation en ligne
-            </Hyperlink>
-                    </TextBlock>
-
-                    <TextBlock FontSize="20" Foreground="#DDDDDD" Margin="5">
-            ❓
-            <Hyperlink NavigateUri="https://smartparking.com/faq" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#4FC3F7">
-                Foire Aux Questions (FAQ)
-            </Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
+        <!-- Pied de page -->
+        <!-- Pied de page -->
+        <Border Grid.Row="2" Background="#252A41" Padding="15" Margin="0,20,0,0">
+            <Grid>
+                <TextBlock Text="© 2025 Smart Parking System" Foreground="#A0AEC0" 
+                   FontSize="14" HorizontalAlignment="Left"/>
+                <TextBlock Text="Version 2.5.1" Foreground="#A0AEC0" 
+                   FontSize="14" HorizontalAlignment="Right"/>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

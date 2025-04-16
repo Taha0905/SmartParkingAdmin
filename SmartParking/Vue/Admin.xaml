@@ -3,51 +3,210 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
       d:DesignHeight="1080" d:DesignWidth="1920"
-      Title="Admin">
+      Title="Smart Parking Admin">
 
-    <Grid Background="#1E1E1E">
+    <Page.Resources>
+        <!-- Animations -->
+        <Storyboard x:Key="MenuItemHover">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.7" To="1" Duration="0:0:0.2"/>
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="10,0,0,0" Duration="0:0:0.2"/>
+        </Storyboard>
 
+        <!-- Styles -->
+        <Style x:Key="ModernSideMenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Regular"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="Margin" Value="0,3"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Opacity" Value="0.8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2E3A59"/>
+                                <Setter Property="Opacity" Value="1"/>
+                                <Setter TargetName="border" Property="Margin" Value="5,0,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A4A6F"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- Conteneur principal  -->
-        <Grid>
+        <!-- Style pour le bouton actif -->
+        <Style x:Key="ActiveMenuButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernSideMenuButtonStyle}">
+            <Setter Property="Background" Value="#2E3A59"/>
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3A4A6F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Animation pour le Frame -->
+        <Style TargetType="Frame" x:Key="ContentFrameStyle">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform X="0" Y="0"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Y" From="20" To="0" Duration="0:0:0.4">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1A1E2C" Offset="0"/>
+                <GradientStop Color="#121420" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid Margin="15">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.2" Color="Black"/>
+            </Grid.Effect>
+
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
-                <!-- Sidebar -->
+                <ColumnDefinition Width="260"/>
                 <ColumnDefinition Width="*"/>
-                <!-- Contenu principal -->
             </Grid.ColumnDefinitions>
 
             <!-- Sidebar -->
-            <Border Grid.Column="0" Background="#2B2B2B" Margin="30,30,10,30" CornerRadius="10" Panel.ZIndex="1">
-                <StackPanel VerticalAlignment="Stretch" Margin="20">
-                    <!-- Titre + Logo -->
-                    <StackPanel Margin="0,20,0,40" HorizontalAlignment="Center">
-                        <TextBlock Text="Smart Parking Admin" FontSize="20" Foreground="White" FontWeight="Bold" TextAlignment="Center"/>
-                        <Image Source="/Source/Images/dossier3.png" Width="100" Height="100" Margin="0,10,0,0"/>
+            <Border Grid.Column="0" Background="#1E293B" CornerRadius="8,0,0,8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Logo et titre -->
+                    <StackPanel Grid.Row="0" Margin="0,25,0,30">
+                        <Border Background="#252A41" CornerRadius="50" Width="70" Height="70" Margin="0,0,0,15" 
+                                HorizontalAlignment="Center">
+                            <material:PackIcon Kind="Parking" Width="40" Height="40" Foreground="#4FD1C5" 
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBlock Text="Smart Parking" FontSize="22" Foreground="White" FontWeight="SemiBold" TextAlignment="Center"/>
+                        <TextBlock Text="Administration" FontSize="14" Foreground="#A0AEC0" TextAlignment="Center" Margin="0,3,0,0"/>
+
+                        <Border Height="1" Margin="40,20,40,0" Background="#4A5568"/>
                     </StackPanel>
 
                     <!-- Menu -->
-                    <StackPanel>
-                        <TextBlock Text="Menu" FontSize="16" Foreground="LightGray" Margin="0,0,0,10"/>
+                    <StackPanel Grid.Row="1" Margin="15,10,15,0">
+                        <TextBlock Text="MENU PRINCIPAL" FontSize="12" Foreground="#718096" Margin="10,0,0,15" FontWeight="SemiBold"/>
 
-                        <Button Content="Vue d'ensemble" Style="{StaticResource SideMenuButtonStyle}" Click="VueDensembleButton_Click"/>
-                        <Button Content="Analyse" Style="{StaticResource SideMenuButtonStyle}" Click="AnalyseButton_Click"/>
-                        <Button Content="Caméra" Style="{StaticResource SideMenuButtonStyle}" Click="CameraButton_Click"/>
-                        <Button Content="Aide" Style="{StaticResource SideMenuButtonStyle}" Click="AideButton_Click"/>
+                        <!-- Boutons de navigation -->
+                        <Button x:Name="VueDensembleButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="VueDensembleButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="ViewDashboard" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Vue d'ensemble" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="AnalyseButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="AnalyseButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="ChartLine" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Analyse" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="CameraButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="CameraButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="Cctv" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Caméra" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="AideButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="AideButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="HelpCircleOutline" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Aide" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <TextBlock Text="PARAMÈTRES" FontSize="12" Foreground="#718096" Margin="10,25,0,15" FontWeight="SemiBold"/>
+
+                        <Button Style="{StaticResource ModernSideMenuButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="AccountCog" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Profil" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource ModernSideMenuButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="Cog" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Configuration" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
 
                     <!-- Déconnexion -->
-                    <StackPanel VerticalAlignment="Bottom" Margin="0,100,0,0">
-                        <Button Content="Déconnexion" Style="{StaticResource SideMenuButtonStyle}" Click="LogoutButton_Click"/>
-                    </StackPanel>
-                </StackPanel>
+                    <Border Grid.Row="2" Margin="15,0,15,25">
+                        <Button Style="{StaticResource ModernSideMenuButtonStyle}" Click="LogoutButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="Logout" Width="18" Height="18" Foreground="#F56565" VerticalAlignment="Center"/>
+                                <TextBlock Text="Déconnexion" Margin="12,0,0,0" Foreground="#F56565" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                </Grid>
             </Border>
 
             <!-- Contenu principal -->
-            <Border Grid.Column="1" Background="#F5F5F5" Margin="10,30,30,30" CornerRadius="10" Panel.ZIndex="1">
-                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"/>
+            <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="0,8,8,0">
+                <!-- En-tête du contenu -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- En-tête avec barre de recherche et profil -->
+
+
+                    <!-- Contenu de la page -->
+                    <Frame Grid.Row="1" x:Name="ContentFrame" NavigationUIVisibility="Hidden" Style="{StaticResource ContentFrameStyle}" 
+                           Background="Transparent" Margin="5"/>
+                </Grid>
             </Border>
         </Grid>
     </Grid>

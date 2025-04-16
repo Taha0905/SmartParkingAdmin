@@ -4,77 +4,270 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:SmartParking"
       mc:Ignorable="d" 
-      d:DesignHeight="960" d:DesignWidth="1720" Background="#1E1E1E"
+      d:DesignHeight="960" d:DesignWidth="1720"
       Title="Analyse">
 
-    <Grid Margin="20">
+    <Page.Resources>
+        <Style x:Key="MetricCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#2E3A59"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Width" Value="480"/>
+            <Setter Property="Height" Value="300"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="15" Opacity="0.2" Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MetricValueStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="36"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,15,0,0"/>
+        </Style>
+
+        <Style x:Key="MetricLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+
+        <!-- Animation pour les cartes -->
+        <Storyboard x:Key="CardHoverAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                             To="1.05" Duration="0:0:0.2"/>
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                             To="1.05" Duration="0:0:0.2"/>
+        </Storyboard>
+
+        <Storyboard x:Key="CardLeaveAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                             To="1.0" Duration="0:0:0.2"/>
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                             To="1.0" Duration="0:0:0.2"/>
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1A1E2C" Offset="0"/>
+                <GradientStop Color="#121420" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Titre -->
-        <Border Background="#2B2B2B" Padding="20" Margin="-20,0,-20,20" CornerRadius="10">
-            <TextBlock Text="🅿 État du Parking" 
+        <!-- En-tête standardisé -->
+        <Border Grid.Row="0" Background="#252A41" Padding="20" Margin="0,0,0,20">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <material:PackIcon Kind="Parking" Width="32" Height="32" Foreground="#4FD1C5" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <TextBlock Text="SMART PARKING MONITOR" 
                        Foreground="White"
-                       FontSize="32" FontWeight="Bold"
-                       HorizontalAlignment="Center"/>
+                       FontSize="24" FontWeight="SemiBold"
+                       VerticalAlignment="Center">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="1" BlurRadius="2" Opacity="0.2" Color="Black"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+
+                <TextBlock Text="Mise à jour en temps réel" Foreground="#4FD1C5" FontSize="14" 
+                   HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </Grid>
         </Border>
 
-        <!-- Contenu principal -->
-        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="1080">
-            <UniformGrid Columns="2" Rows="2" Margin="15" HorizontalAlignment="Center">
+        <!-- Contenu principal avec cartes -->
+        <Grid Grid.Row="1" Margin="30,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Titre de section -->
+            <TextBlock Text="État Environnemental du Parking" 
+                       Foreground="White" FontSize="24" FontWeight="Medium"
+                       Margin="15,0,0,20"/>
+
+            <!-- Cartes de métriques -->
+            <UniformGrid Grid.Row="1" Columns="2" Rows="2" HorizontalAlignment="Center">
 
                 <!-- Température -->
-                <Border Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="12"
-                        Width="480" Height="300">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <material:PackIcon Kind="Thermometer" Width="100" Height="100" Foreground="#FFA01C1C"/>
-                        <TextBlock x:Name="txtTemperature" Text="25°C" Foreground="#2B2B2B" FontSize="30" 
-                                   FontWeight="Medium" TextAlignment="Center" Margin="0,15,0,0"/>
-                        <TextBlock Text="Température" Foreground="Gray" FontSize="20" 
-                                   TextAlignment="Center"/>
-                    </StackPanel>
+                <Border x:Name="TempCard" Style="{StaticResource MetricCardStyle}" 
+                        RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Border.RenderTransform>
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Border.MouseEnter">
+                            <BeginStoryboard Storyboard="{StaticResource CardHoverAnimation}"/>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Border.MouseLeave">
+                            <BeginStoryboard Storyboard="{StaticResource CardLeaveAnimation}"/>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Température" Foreground="#A0AEC0" FontSize="18" 
+                                   HorizontalAlignment="Left"/>
+
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="#FF4A5568" CornerRadius="50" Width="100" Height="100">
+                                <material:PackIcon Kind="Thermometer" Width="60" Height="60" Foreground="#F56565"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock x:Name="txtTemperature" Text="25°C" Style="{StaticResource MetricValueStyle}"/>
+                        </StackPanel>
+
+                        <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                            <TextBlock Text="Normal" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
+                        </Border>
+                    </Grid>
                 </Border>
 
                 <!-- Humidité -->
-                <Border Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="12"
-                        Width="480" Height="300">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <material:PackIcon Kind="WaterPercent" Width="100" Height="100" Foreground="#FF2870A7"/>
-                        <TextBlock x:Name="txtHumidite" Text="50%" Foreground="#2B2B2B" FontSize="30" 
-                                   FontWeight="Medium" TextAlignment="Center" Margin="0,15,0,0"/>
-                        <TextBlock Text="Humidité" Foreground="Gray" FontSize="20" 
-                                   TextAlignment="Center"/>
-                    </StackPanel>
+                <Border x:Name="HumidityCard" Style="{StaticResource MetricCardStyle}"
+                        RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Border.RenderTransform>
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Border.MouseEnter">
+                            <BeginStoryboard Storyboard="{StaticResource CardHoverAnimation}"/>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Border.MouseLeave">
+                            <BeginStoryboard Storyboard="{StaticResource CardLeaveAnimation}"/>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Humidité" Foreground="#A0AEC0" FontSize="18" 
+                                   HorizontalAlignment="Left"/>
+
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="#FF4A5568" CornerRadius="50" Width="100" Height="100">
+                                <material:PackIcon Kind="WaterPercent" Width="60" Height="60" Foreground="#4299E1"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock x:Name="txtHumidite" Text="50%" Style="{StaticResource MetricValueStyle}"/>
+                        </StackPanel>
+
+                        <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                            <TextBlock Text="Optimal" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
+                        </Border>
+                    </Grid>
                 </Border>
 
                 <!-- CO₂ -->
-                <Border Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="12"
-                        Width="480" Height="300">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <material:PackIcon Kind="MoleculeCo2" Width="100" Height="100" Foreground="#FF2A7914"/>
-                        <TextBlock x:Name="txtCO2" Text="400 ppm" Foreground="#2B2B2B" FontSize="30" 
-                                   FontWeight="Medium" TextAlignment="Center" Margin="0,15,0,0"/>
-                        <TextBlock Text="CO₂" Foreground="Gray" FontSize="20" 
-                                   TextAlignment="Center"/>
-                    </StackPanel>
+                <Border x:Name="CO2Card" Style="{StaticResource MetricCardStyle}"
+                        RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Border.RenderTransform>
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Border.MouseEnter">
+                            <BeginStoryboard Storyboard="{StaticResource CardHoverAnimation}"/>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Border.MouseLeave">
+                            <BeginStoryboard Storyboard="{StaticResource CardLeaveAnimation}"/>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="CO₂" Foreground="#A0AEC0" FontSize="18" 
+                                   HorizontalAlignment="Left"/>
+
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="#FF4A5568" CornerRadius="50" Width="100" Height="100">
+                                <material:PackIcon Kind="MoleculeCo2" Width="60" Height="60" Foreground="#48BB78"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock x:Name="txtCO2p10" Text="400 ppm" Style="{StaticResource MetricValueStyle}" FontSize="20"/>
+                            <TextBlock x:Name="txtCO2p25" Text="400 ppm" Style="{StaticResource MetricValueStyle}" FontSize="20"/>
+                        </StackPanel>
+
+                        <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                            <TextBlock Text="Excellent" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
+                        </Border>
+                    </Grid>
                 </Border>
 
                 <!-- Niveau sonore -->
-                <Border Background="#FFE8D055" CornerRadius="10" Padding="15" Margin="12"
-                        Width="480" Height="300">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <material:PackIcon Kind="VolumeHigh" Width="100" Height="100" Foreground="Black"/>
-                        <TextBlock x:Name="txtSon" Text="60 dB" Foreground="#2B2B2B" FontSize="30" 
-                                   FontWeight="Medium" TextAlignment="Center" Margin="0,15,0,0"/>
-                        <TextBlock Text="Niveau Sonore" Foreground="Gray" FontSize="20" 
-                                   TextAlignment="Center"/>
-                    </StackPanel>
-                </Border>
+                <Border x:Name="SoundCard" Style="{StaticResource MetricCardStyle}"
+                        RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Border.RenderTransform>
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Border.MouseEnter">
+                            <BeginStoryboard Storyboard="{StaticResource CardHoverAnimation}"/>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Border.MouseLeave">
+                            <BeginStoryboard Storyboard="{StaticResource CardLeaveAnimation}"/>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
+                        <TextBlock Text="Niveau Sonore" Foreground="#A0AEC0" FontSize="18" 
+                                   HorizontalAlignment="Left"/>
+
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="#FF4A5568" CornerRadius="50" Width="100" Height="100">
+                                <material:PackIcon Kind="VolumeHigh" Width="60" Height="60" Foreground="#ED8936"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock x:Name="txtSon" Text="60 dB" Style="{StaticResource MetricValueStyle}"/>
+                        </StackPanel>
+
+                        <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                            <TextBlock Text="Modéré" Foreground="#F6AD55" FontSize="14" TextAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
             </UniformGrid>
-        </StackPanel>
+        </Grid>
+
+        <!-- Pied de page -->
+        <!-- Pied de page -->
+        <Border Grid.Row="2" Background="#252A41" Padding="15" Margin="0,20,0,0">
+            <Grid>
+                <TextBlock Text="© 2025 Smart Parking System" Foreground="#A0AEC0" 
+                   FontSize="14" HorizontalAlignment="Left"/>
+                <TextBlock Text="Version 2.5.1" Foreground="#A0AEC0" 
+                   FontSize="14" HorizontalAlignment="Right"/>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

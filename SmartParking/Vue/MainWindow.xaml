@@ -1,11 +1,12 @@
 ﻿<Window x:Class="SmartParking.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Connexion" Height="600" Width="1000" WindowStartupLocation="CenterScreen"
-        Background="#FFEB83" WindowStyle="None" ResizeMode="NoResize">
+        Background="#252A41" WindowStyle="None" ResizeMode="NoResize">
     <Grid>
         <!-- Image de fond  -->
-        <Image Source="/Source/Images/fond.png" Stretch="UniformToFill" Margin="20,20,20,20" />
+        <Image Source="/Source/Images/fond1.png" Stretch="UniformToFill" Margin="20,20,20,20" />
 
         <!-- Croix en haut à droite -->
         <Button x:Name="CloseButton" Content="✖" HorizontalAlignment="Right" VerticalAlignment="Top" 
@@ -37,26 +38,72 @@
             </Button.Style>
         </Button>
 
+
+
         <!-- Contenu principal -->
         <Border Width="600" Padding="30" Background="White" CornerRadius="15" 
                 VerticalAlignment="Center" HorizontalAlignment="Center" 
                 Height="400" Opacity="0.9">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.2" Color="Black"/>
+            </Border.Effect>
             <StackPanel>
-                <TextBlock Text="Connexion" FontSize="28" FontWeight="Bold" 
-                           HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                <!-- Logo et titre -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <Border Background="#252A41" CornerRadius="50" Width="50" Height="50" Margin="0,0,15,0">
+                        <material:PackIcon Kind="Parking" Width="30" Height="30" Foreground="#4FD1C5" 
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Connexion" FontSize="28" FontWeight="Bold" 
+                               VerticalAlignment="Center"/>
+                </StackPanel>
 
+                <!-- Champ utilisateur avec icône -->
                 <TextBlock Text="Utilisateur :" FontWeight="SemiBold" FontSize="16"/>
-                <TextBox x:Name="UsernameTextBox" Height="40" Margin="0,5,0,15" 
-                         Padding="10" FontSize="14" BorderThickness="1" BorderBrush="Gray" />
+                <Grid Margin="0,5,0,15">
+                    <TextBox x:Name="UsernameTextBox" Height="40" Padding="40,0,10,0" 
+                             FontSize="14" BorderThickness="1" BorderBrush="Gray" 
+                             VerticalContentAlignment="Center">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <material:PackIcon Kind="Account" Width="20" Height="20" Foreground="#252A41" 
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </Grid>
 
+                <!-- Champ mot de passe avec icône -->
                 <TextBlock Text="Mot de passe :" FontWeight="SemiBold" FontSize="16"/>
-                <PasswordBox x:Name="PasswordBox" Height="40" Margin="0,5,0,20" 
-                             Padding="10" FontSize="14" BorderThickness="1" BorderBrush="Gray" />
+                <Grid Margin="0,5,0,20">
+                    <PasswordBox x:Name="PasswordBox" Height="40" Padding="40,0,10,0" 
+                                 FontSize="14" BorderThickness="1" BorderBrush="Gray" 
+                                 VerticalContentAlignment="Center">
+                        <PasswordBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </PasswordBox.Resources>
+                    </PasswordBox>
+                    <material:PackIcon Kind="Lock" Width="20" Height="20" Foreground="#252A41" 
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </Grid>
 
-                <Button Content="Se connecter" Width="180" Height="50" 
-                        Background="#0078D4" Foreground="White" FontSize="16"
+                <!-- Bouton de connexion avec icône -->
+                <Button Width="180" Height="50" 
+                        Background="#252A41" Foreground="White" FontSize="16"
                         FontWeight="Bold" BorderThickness="0" Cursor="Hand"
                         HorizontalAlignment="Center" Click="LoginButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <material:PackIcon Kind="Login" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Se connecter" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="#0078D4"/>
@@ -65,9 +112,6 @@
                             <Setter Property="Cursor" Value="Hand"/>
                             <Setter Property="FontWeight" Value="Bold"/>
                             <Setter Property="FontSize" Value="16"/>
-                            <Setter Property="Width" Value="180"/>
-                            <Setter Property="Height" Value="50"/>
-                            <Setter Property="Margin" Value="10"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#005A9E"/>
@@ -79,7 +123,35 @@
                         </Style>
                     </Button.Style>
                 </Button>
+
+                <!-- Pied de page -->
+                <TextBlock Text="© 2025 Smart Parking System" FontSize="12" Foreground="#777777" 
+                           HorizontalAlignment="Center" Margin="0,30,0,0"/>
             </StackPanel>
         </Border>
+
+        <!-- Badges en bas de page -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20">
+            <Border Background="#333333" CornerRadius="15" Padding="15,8" Margin="5" Opacity="0.8">
+                <StackPanel Orientation="Horizontal">
+                    <material:PackIcon Kind="ShieldCheck" Width="18" Height="18" Foreground="White" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Connexion sécurisée" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <Border Background="#333333" CornerRadius="15" Padding="15,8" Margin="5" Opacity="0.8">
+                <StackPanel Orientation="Horizontal">
+                    <material:PackIcon Kind="Clock" Width="18" Height="18" Foreground="White" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Surveillance 24/7" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <Border Background="#333333" CornerRadius="15" Padding="15,8" Margin="5" Opacity="0.8">
+                <StackPanel Orientation="Horizontal">
+                    <material:PackIcon Kind="CarMultiple" Width="18" Height="18" Foreground="White" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Gestion intelligente" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </Window>

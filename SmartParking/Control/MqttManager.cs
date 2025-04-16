@@ -4,21 +4,17 @@ using MQTTnet.Client.Options;
 using System;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace SmartParking
 {
-    public partial class Analyse : Page
+    public class MqttManager
     {
-        private MQTTnet.Client.IMqttClient mqttClient;
+        private IMqttClient mqttClient;
+        public static MqttManager Instance { get; } = new MqttManager();
 
-        public Analyse()
-        {
-            InitializeComponent();
-            InitMQTT();
-        }
+        private MqttManager() { InitMQTT(); }
 
-        private async void InitMQTT()
+        public async void InitMQTT()
         {
             var factory = new MqttFactory();
             mqttClient = factory.CreateMqttClient();
@@ -31,8 +27,6 @@ namespace SmartParking
 
             mqttClient.UseConnectedHandler(async e =>
             {
-                Console.WriteLine("MQTT connecté !");
-
                 string[] topics = {
                     "climat/humidity",
                     "climat/temperature",
@@ -42,10 +36,7 @@ namespace SmartParking
                 };
 
                 foreach (var topic in topics)
-                {
                     await mqttClient.SubscribeAsync(topic);
-                    Console.WriteLine("Abonné à " + topic);
-                }
             });
 
             mqttClient.UseApplicationMessageReceivedHandler(e =>
@@ -53,26 +44,18 @@ namespace SmartParking
                 string topic = e.ApplicationMessage.Topic;
                 string value = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
 
+                // Vérification de seuils critiques
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    switch (topic)
+                    if (topic == "climat/temperature" && double.TryParse(value, out double temp) && temp > 40)
                     {
-                        case "climat/humidity":
-                            txtHumidite.Text = value + " %";
-                            break;
-                        case "climat/temperature":
-                            txtTemperature.Text = value + " °C";
-                            break;
-                        case "climat/decibels":
-                            txtSon.Text = value + " dB";
-                            break;
-                        case "climat/air_quality_10":
-                            txtCO2p10.Text = "PM10 : " + value + " µg/m³";
-                            break;
-                        case "climat/air_quality_25":
-                            txtCO2p25.Text = "PM2.5 : " + value + " µg/m³";
-                            break;
+                        ShowEmergencyPopup("Température critique : " + temp + " °C");
                     }
+                    else if (topic == "climat/air_quality_10" && double.TryParse(value, out double pm10) && pm10 > 200)
+                    {
+                        ShowEmergencyPopup("PM10 élevé : " + pm10 + " µg/m³");
+                    }
+                    // Ajoute d'autres conditions ici si besoin
                 });
             });
 
@@ -84,6 +67,11 @@ namespace SmartParking
             {
                 MessageBox.Show("Erreur de connexion MQTT : " + ex.Message);
             }
+        }
+
+        private void ShowEmergencyPopup(string message)
+        {
+            MessageBox.Show(message, "⚠ Alerte Critique", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }
