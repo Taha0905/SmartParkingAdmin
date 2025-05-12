@@ -143,8 +143,7 @@
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock x:Name="TextOccupe" Text="0" Style="{StaticResource StatNumberStyle}" Foreground="#F56565"/>
-                            <TextBlock Text="/" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568" Margin="5,0"/>
-                            <TextBlock Text="6" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568"/>
+
                         </StackPanel>
                         <TextBlock Text="Places occupées" Style="{StaticResource StatLabelStyle}"/>
                     </StackPanel>
@@ -155,8 +154,7 @@
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock x:Name="TextLibre" Text="0" Style="{StaticResource StatNumberStyle}" Foreground="#48BB78"/>
-                            <TextBlock Text="/" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568" Margin="5,0"/>
-                            <TextBlock Text="6" FontSize="32" FontWeight="SemiBold" Foreground="#4A5568"/>
+
                         </StackPanel>
                         <TextBlock Text="Places disponibles" Style="{StaticResource StatLabelStyle}"/>
                     </StackPanel>

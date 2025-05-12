@@ -5,43 +5,51 @@ namespace SmartParking
 {
     public partial class Admin : Page
     {
+        private Analyse analysePage;
+
         public Admin()
         {
             InitializeComponent();
-            // Affichage de la page "Vue d'ensemble" par défaut
+
+            // Autoriser les popups MQTT uniquement ici (admin connecté)
+            MqttManager.Instance.AutoriserPopups = true;
+
+            // Initialiser la page Analyse (facultatif si tu veux déjà démarrer le MQTT ici aussi)
+            analysePage = new Analyse();
+            analysePage.StartMQTT();
+
+            // Affichage par défaut
             ContentFrame.Navigate(new VueDensemble());
         }
 
-        // Gestion du clic sur le bouton "Analyse"
-        private void AnalyseButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void AnalyseButton_Click(object sender, RoutedEventArgs e)
         {
-            ContentFrame.Navigate(new Analyse());
+            ContentFrame.Navigate(analysePage);
         }
 
-        // Gestion du clic sur le bouton "Vue d'ensemble"
-        private void VueDensembleButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void VueDensembleButton_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new VueDensemble());
         }
 
-        // Gestion du clic sur le bouton "Caméra"
-        private void CameraButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void CameraButton_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Camera());
         }
 
-        private void LogoutButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            // Retour à la page de connexion
+            // Désactiver les popups lors de la déconnexion
+            MqttManager.Instance.AutoriserPopups = false;
+
             MainWindow loginWindow = new MainWindow();
-            loginWindow.Show(); // Afficher la fenêtre de connexion
-            Window.GetWindow(this).Close(); // Fermer la fenêtre actuelle (Admin)
+            loginWindow.Show();
+            Window.GetWindow(this).Close();
         }
 
         private void AideButton_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Aide());
-
         }
     }
 }

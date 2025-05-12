@@ -137,7 +137,7 @@
                         </StackPanel>
 
                         <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
-                            <TextBlock Text="Normal" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
+                            <TextBlock x:Name="txtStatusTemp" Text="Normal" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
                         </Border>
                     </Grid>
                 </Border>
@@ -175,7 +175,7 @@
                         </StackPanel>
 
                         <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
-                            <TextBlock Text="Optimal" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
+                            <TextBlock x:Name="txtStatusHumidite" Text="Optimal" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
                         </Border>
                     </Grid>
                 </Border>
@@ -201,12 +201,12 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="CO₂" Foreground="#A0AEC0" FontSize="18" 
+                        <TextBlock Text="Qualité d'air" Foreground="#A0AEC0" FontSize="18" 
                                    HorizontalAlignment="Left"/>
 
                         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <Border Background="#FF4A5568" CornerRadius="50" Width="100" Height="100">
-                                <material:PackIcon Kind="MoleculeCo2" Width="60" Height="60" Foreground="#48BB78"
+                                <material:PackIcon Kind="WeatherWindy" Width="60" Height="60" Foreground="#48BB78"
                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             <TextBlock x:Name="txtCO2p10" Text="400 ppm" Style="{StaticResource MetricValueStyle}" FontSize="20"/>
@@ -214,7 +214,7 @@
                         </StackPanel>
 
                         <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
-                            <TextBlock Text="Excellent" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
+                            <TextBlock x:Name="txtStatusCO2" Text="Excellent" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
                         </Border>
                     </Grid>
                 </Border>
@@ -252,7 +252,7 @@
                         </StackPanel>
 
                         <Border Grid.Row="2" Background="#1E293B" CornerRadius="8" Padding="10" Margin="0,10,0,0">
-                            <TextBlock Text="Modéré" Foreground="#F6AD55" FontSize="14" TextAlignment="Center"/>
+                            <TextBlock x:Name="txtStatusSon" Text="Modéré" Foreground="#4FD1C5" FontSize="14" TextAlignment="Center"/>
                         </Border>
                     </Grid>
                 </Border>

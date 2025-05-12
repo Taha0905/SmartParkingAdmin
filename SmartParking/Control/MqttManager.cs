@@ -2,6 +2,7 @@
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 
@@ -11,8 +12,16 @@ namespace SmartParking
     {
         private IMqttClient mqttClient;
         public static MqttManager Instance { get; } = new MqttManager();
+        public bool AutoriserPopups { get; set; } = false;
 
-        private MqttManager() { InitMQTT(); }
+        // Anti-spam des alertes
+        private Dictionary<string, DateTime> dernierAlerte = new Dictionary<string, DateTime>();
+        private readonly TimeSpan delaiAlerte = TimeSpan.FromSeconds(20);
+
+        private MqttManager()
+        {
+            InitMQTT();
+        }
 
         public async void InitMQTT()
         {
@@ -44,18 +53,53 @@ namespace SmartParking
                 string topic = e.ApplicationMessage.Topic;
                 string value = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Trim();
 
-                // Vérification de seuils critiques
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (topic == "climat/temperature" && double.TryParse(value, out double temp) && temp > 40)
+                    if (double.TryParse(value.Replace('.', ','), out double numericValue))
                     {
-                        ShowEmergencyPopup("Température critique : " + temp + " °C");
+                        bool PeutAfficher(string capteur)
+                        {
+                            if (!dernierAlerte.ContainsKey(capteur)) return true;
+                            return (DateTime.Now - dernierAlerte[capteur]) > delaiAlerte;
+                        }
+
+                        void AfficherEtMarquer(string capteur, string message)
+                        {
+                            if (AutoriserPopups && PeutAfficher(capteur))
+                            {
+                                MessageBox.Show(message, "Alerte capteur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                dernierAlerte[capteur] = DateTime.Now;
+                            }
+                        }
+
+                        switch (topic)
+                        {
+                            case "climat/temperature":
+                                if (numericValue > 40)
+                                    AfficherEtMarquer("temperature", "⚠ Température critique : " + numericValue + " °C");
+                                break;
+
+                            case "climat/humidity":
+                                if (numericValue > 70)
+                                    AfficherEtMarquer("humidity", "⚠ Humidité excessive : " + numericValue + " %");
+                                break;
+
+                            case "climat/decibels":
+                                if (numericValue > 100)
+                                    AfficherEtMarquer("decibels", "⚠ Bruit élevé : " + numericValue + " dB");
+                                break;
+
+                            case "climat/air_quality_10":
+                                if (numericValue > 200)
+                                    AfficherEtMarquer("pm10", "⚠ Particules PM10 élevées : " + numericValue + " µg/m³");
+                                break;
+
+                            case "climat/air_quality_25":
+                                if (numericValue > 100)
+                                    AfficherEtMarquer("pm25", "⚠ Particules PM2.5 critiques : " + numericValue + " µg/m³");
+                                break;
+                        }
                     }
-                    else if (topic == "climat/air_quality_10" && double.TryParse(value, out double pm10) && pm10 > 200)
-                    {
-                        ShowEmergencyPopup("PM10 élevé : " + pm10 + " µg/m³");
-                    }
-                    // Ajoute d'autres conditions ici si besoin
                 });
             });
 
@@ -65,13 +109,8 @@ namespace SmartParking
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erreur de connexion MQTT : " + ex.Message);
+                MessageBox.Show("Erreur de connexion MQTT : " + ex.Message, "Erreur MQTT", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void ShowEmergencyPopup(string message)
-        {
-            MessageBox.Show(message, "⚠ Alerte Critique", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }
