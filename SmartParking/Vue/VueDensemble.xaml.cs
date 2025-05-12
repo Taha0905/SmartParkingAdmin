@@ -1,184 +1,152 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using SmartParking.Control;
+using SmartParking.Model;
+using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Client.Options;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
-using System.Net.Http;
-using MQTTnet.Client.Receiving;
-using SmartParking.Model;
 
 namespace SmartParking
 {
     public partial class VueDensemble : Page
     {
-        private const string Token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDIzMDg4NTEsImV4cCI6MTAxNzQyMzA4ODUxLCJkYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6IlNtYXJ0UGFya2luZyJ9fQ.B-dPPnoL4DnwsZ6_j6GRxs74Zn5XLQw-K8OjWIbegjk";
-        private const string ApiReservations = "https://smartparking.alwaysdata.net/getAllReservations";
-        private const string ApiDeleteReservation = "https://smartparking.alwaysdata.net/deleteReservation";
+
+        private ObservableCollection<Reservation> AllReservations = new ObservableCollection<Reservation>();
+
+        private readonly ReservationController reservationController = new ReservationController();
+        private readonly PlaceMqttManager mqttManager = new PlaceMqttManager();
 
         private readonly DispatcherTimer refreshTimer;
-        private IMqttClient mqttClient;
-        private Dictionary<string, string> placesEtat = new Dictionary<string, string>();
 
         public ObservableCollection<Reservation> Reservations { get; set; }
 
         public VueDensemble()
         {
             InitializeComponent();
+
             Reservations = new ObservableCollection<Reservation>();
             ListViewReservations.ItemsSource = Reservations;
 
-            LoadReservationsData();
+            LoadReservations();
 
-            Task.Run(async () => await ConnectToMqttBrokerAsync());
+            // Connexion MQTT + mise à jour UI
+            mqttManager.OnMessageReceived += (topic, message) =>
+            {
+                if (Application.Current == null || Application.Current.Dispatcher == null)
+                    return;
 
-            refreshTimer = new DispatcherTimer();
-            refreshTimer.Interval = TimeSpan.FromSeconds(5);
-            refreshTimer.Tick += (s, e) => { LoadReservationsData(); };
+                Application.Current.Dispatcher.Invoke(() => UpdatePlacesState());
+            };
+            _ = mqttManager.ConnectAsync();
+
+            // Timer de rafraîchissement automatique
+            refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+            refreshTimer.Tick += (s, e) => LoadReservations();
             refreshTimer.Start();
         }
 
-        private async Task ConnectToMqttBrokerAsync()
-        {
-            var factory = new MqttFactory();
-            mqttClient = factory.CreateMqttClient();
-
-            var options = new MqttClientOptionsBuilder()
-                .WithClientId("SmartParking_Client")
-                .WithTcpServer("172.31.254.254", 1883)
-                .WithCleanSession(false)
-                .Build();
-
-            mqttClient.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(e =>
-            {
-                string topic = e.ApplicationMessage.Topic;
-                string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-                ProcessMqttMessage(topic, payload);
-            });
-
-            await mqttClient.ConnectAsync(options, CancellationToken.None);
-
-            string[] topics = { "places/place1", "places/place2", "places/place3",
-                                "places/place4", "places/place5", "places/place6" };
-
-            foreach (var topic in topics)
-            {
-                placesEtat[topic] = "Inconnu";
-                await mqttClient.SubscribeAsync(topic);
-            }
-        }
-
-        private void ProcessMqttMessage(string topic, string message)
-        {
-            // Vérifier si l'application est en cours de fermeture
-            if (Application.Current == null || Application.Current.Dispatcher == null)
-                return;
-
-            try
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if (placesEtat == null) return; // Vérifie que le dictionnaire est bien initialisé
-
-                    placesEtat[topic] = message;
-
-                    int placesLibres = 0;
-                    int placesOccupees = 0;
-
-                    foreach (var etat in placesEtat.Values)
-                    {
-                        if (etat.Equals("Libre", StringComparison.OrdinalIgnoreCase))
-                            placesLibres++;
-                        else if (etat.Equals("Prise", StringComparison.OrdinalIgnoreCase))
-                            placesOccupees++;
-                    }
-
-                    // Vérifier que les contrôles existent avant de les modifier
-                    if (TextLibre != null && TextOccupe != null)
-                    {
-                        TextLibre.Text = placesLibres.ToString();
-                        TextOccupe.Text = placesOccupees.ToString();
-                    }
-                });
-            }
-            catch (TaskCanceledException)
-            {
-                // Ne rien faire, l'application est en train de se fermer
-            }
-            catch (Exception ex)
-            {
-                // Log de l'erreur sans bloquer l'application
-                Console.WriteLine($"Erreur dans ProcessMqttMessage : {ex.Message}");
-            }
-        }
-
-
-        private async void LoadReservationsData()
+        private async void LoadReservations()
         {
             try
             {
-                using (HttpClient client = new HttpClient())
+                var reservationsList = await reservationController.GetReservationsAsync();
+                Reservations.Clear();
+                AllReservations.Clear();
+
+                foreach (var res in reservationsList)
                 {
-                    client.DefaultRequestHeaders.Add("Authorization", Token);
+                    if (!string.IsNullOrEmpty(res.DateReservation))
+                        res.DateReservationFormatted = DateTime.Parse(res.DateReservation).ToString("dd/MM/yyyy HH:mm");
 
-                    HttpResponseMessage response = await client.GetAsync(ApiReservations);
-                    if (response.IsSuccessStatusCode)
+                    if (!string.IsNullOrEmpty(res.TempsReservation))
                     {
-                        string jsonResponse = await response.Content.ReadAsStringAsync();
-                        List<Reservation> reservationsList = JsonConvert.DeserializeObject<List<Reservation>>(jsonResponse);
+                        TimeSpan duration = TimeSpan.Parse(res.TempsReservation);
+                        res.TempsReservationFormatted = $"{duration.Hours}h {duration.Minutes}m";
+                    }
 
-                        Reservations.Clear();
-                        foreach (var res in reservationsList)
-                        {
-                            res.DateReservationFormatted = DateTime.Parse(res.DateReservation).ToString("dd/MM/yyyy HH:mm");
-                            TimeSpan duration = TimeSpan.Parse(res.TempsReservation);
-                            res.TempsReservationFormatted = $"{duration.Hours}h {duration.Minutes}m";
-                            res.DeleteCommand = new RelayCommand(async () => await DeleteReservation(res.IDReservation));
-                            Reservations.Add(res);
-                        }
-                    }
-                    else
+                    res.DeleteCommand = new RelayCommand(async () =>
                     {
-                        MessageBox.Show("Erreur lors de la récupération des réservations.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                        await DeleteReservationAsync(res.IDReservation);
+                    });
+
+                    Reservations.Add(res);
+                    AllReservations.Add(res);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erreur: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Erreur : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private async Task DeleteReservation(int reservationId)
+        private async Task DeleteReservationAsync(int reservationId)
         {
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("Authorization", Token);
+                //Ajout de la confirmation
+                var result = MessageBox.Show("Voulez-vous vraiment supprimer cette réservation ?",
+                                             "Confirmation",
+                                             MessageBoxButton.YesNo,
+                                             MessageBoxImage.Question);
 
-                    HttpResponseMessage deleteResponse = await client.DeleteAsync($"{ApiDeleteReservation}/{reservationId}");
-                    if (!deleteResponse.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show($"Erreur lors de la suppression de la réservation. Réponse API: {await deleteResponse.Content.ReadAsStringAsync()}",
-                                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
+                if (result != MessageBoxResult.Yes)
+                    return; // Si l'utilisateur annule, on sort sans supprimer
 
-                    LoadReservationsData();
-                }
+                await reservationController.DeleteReservationAsync(reservationId);
+                LoadReservations();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erreur: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Erreur : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void UpdatePlacesState()
+        {
+            int libres = 0, occupees = 0;
+            foreach (var etat in mqttManager.PlacesEtat.Values)
+            {
+                if (etat.Equals("Libre", StringComparison.OrdinalIgnoreCase)) libres++;
+                else if (etat.Equals("Prise", StringComparison.OrdinalIgnoreCase)) occupees++;
+            }
+
+            if (TextLibre != null)
+                TextLibre.Text = libres.ToString();
+
+            if (TextOccupe != null)
+                TextOccupe.Text = occupees.ToString();
+        }
+
+        private void BtnFiltrer_Click(object sender, RoutedEventArgs e)
+        {
+            if (DateFiltre.SelectedDate.HasValue)
+            {
+                refreshTimer.Stop(); // stop le refresh auto
+
+                DateTime dateSelectionnee = DateFiltre.SelectedDate.Value.Date;
+
+                var reservationsFiltrees = AllReservations.Where(r =>
+                {
+                    if (DateTime.TryParse(r.DateReservation, out DateTime dateResa))
+                        return dateResa.Date == dateSelectionnee;
+                    return false;
+                }).ToList();
+
+                Reservations.Clear();
+                foreach (var res in reservationsFiltrees)
+                    Reservations.Add(res);
+            }
+        }
+
+
+        private void BtnReinitialiser_Click(object sender, RoutedEventArgs e)
+        {
+            Reservations.Clear();
+            foreach (var res in AllReservations)
+                Reservations.Add(res);
+
+            refreshTimer.Start(); // relance le refresh auto !
         }
     }
 }

@@ -46,6 +46,12 @@
             </Setter>
         </Style>
 
+        <Style TargetType="DatePickerTextBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="BorderBrush" Value="#4FD1C5"/>
+        </Style>
+
         <Style x:Key="DeleteButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#F56565"/>
             <Setter Property="Foreground" Value="White"/>
@@ -174,6 +180,34 @@
                         <TextBlock Text="Liste des Réservations" Style="{StaticResource SectionTitleStyle}"/>
                         <Border Background="#4FD1C5" Height="2" Width="60" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,30,0,0"/>
                     </Grid>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+                        <DatePicker x:Name="DateFiltre" Width="150" Margin="0,0,10,0"
+                Background="#1E293B" Foreground="White"
+                BorderBrush="#4FD1C5" BorderThickness="1"
+                SelectedDateFormat="Short" Height="25"/>
+                        <Button Content="Filtrer" Width="80" Margin="0,0,5,0"
+        Background="#4FD1C5" Foreground="Black" FontWeight="SemiBold"
+        BorderBrush="#38B2AC" BorderThickness="1"
+        Cursor="Hand" Click="BtnFiltrer_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <Button Content="Réinitialiser" Width="100"
+        Background="#F56565" Foreground="White" FontWeight="SemiBold"
+        BorderBrush="#E53E3E" BorderThickness="1"
+        Cursor="Hand" Click="BtnReinitialiser_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
 
                     <!-- Liste des réservations -->
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
