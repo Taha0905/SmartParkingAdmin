@@ -179,35 +179,57 @@
                     <Grid Grid.Row="0" Margin="0,0,0,15">
                         <TextBlock Text="Liste des Réservations" Style="{StaticResource SectionTitleStyle}"/>
                         <Border Background="#4FD1C5" Height="2" Width="60" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,30,0,0"/>
+
+                        <!-- Section de filtrage modifiée -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+                            <!-- Date Picker avec style amélioré -->
+                            <Border Background="#1E293B" CornerRadius="8" Margin="0,0,10,0">
+                                <DatePicker x:Name="DateFiltre" Width="150" Margin="5"
+                                    Background="Transparent" Foreground="White"
+                                    BorderBrush="Transparent" BorderThickness="0"
+                                    SelectedDateFormat="Short" Height="30">
+                                    <DatePicker.Resources>
+                                        <Style TargetType="DatePickerTextBox">
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        </Style>
+                                    </DatePicker.Resources>
+                                </DatePicker>
+                            </Border>
+
+                            <!-- Bouton Filtrer avec style amélioré -->
+                            <Button Content="Filtrer" Width="100" Height="30" Margin="0,0,10,0"
+                                Background="#4FD1C5" Foreground="White" FontWeight="SemiBold"
+                                BorderBrush="#38B2AC" BorderThickness="0"
+                                Cursor="Hand" Click="BtnFiltrer_Click">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="8"/>
+                                    </Style>
+                                </Button.Resources>
+                                <Button.Effect>
+                                    <DropShadowEffect ShadowDepth="1" BlurRadius="3" Opacity="0.2" Color="Black"/>
+                                </Button.Effect>
+                            </Button>
+
+                            <!-- Bouton Réinitialiser avec style amélioré -->
+                            <Button Content="Réinitialiser" Width="120" Height="30"
+                                Background="#2D3748" Foreground="White" FontWeight="SemiBold"
+                                BorderBrush="#4A5568" BorderThickness="0"
+                                Cursor="Hand" Click="BtnReinitialiser_Click">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="8"/>
+                                    </Style>
+                                </Button.Resources>
+                                <Button.Effect>
+                                    <DropShadowEffect ShadowDepth="1" BlurRadius="3" Opacity="0.2" Color="Black"/>
+                                </Button.Effect>
+                            </Button>
+                        </StackPanel>
                     </Grid>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
-                        <DatePicker x:Name="DateFiltre" Width="150" Margin="0,0,10,0"
-                Background="#1E293B" Foreground="White"
-                BorderBrush="#4FD1C5" BorderThickness="1"
-                SelectedDateFormat="Short" Height="25"/>
-                        <Button Content="Filtrer" Width="80" Margin="0,0,5,0"
-        Background="#4FD1C5" Foreground="Black" FontWeight="SemiBold"
-        BorderBrush="#38B2AC" BorderThickness="1"
-        Cursor="Hand" Click="BtnFiltrer_Click">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="8"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-
-                        <Button Content="Réinitialiser" Width="100"
-        Background="#F56565" Foreground="White" FontWeight="SemiBold"
-        BorderBrush="#E53E3E" BorderThickness="1"
-        Cursor="Hand" Click="BtnReinitialiser_Click">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="8"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                    </StackPanel>
 
                     <!-- Liste des réservations -->
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
@@ -279,7 +301,6 @@
             </Border>
         </Grid>
 
-        <!-- Pied de page -->
         <!-- Pied de page -->
         <Border Grid.Row="2" Background="#252A41" Padding="15" Margin="0,20,0,0">
             <Grid>
