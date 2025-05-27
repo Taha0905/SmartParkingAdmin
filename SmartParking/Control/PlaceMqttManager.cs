@@ -2,7 +2,6 @@
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -12,19 +11,26 @@ namespace SmartParking.Control
 {
     public class PlaceMqttManager
     {
-        private readonly string[] _topics = { "places/place1", "places/place2", "places/place3", "places/place4", "places/place5", "places/place6" };
-        public Dictionary<string, string> PlacesEtat { get; private set; } = new();
+        private readonly string[] _topics = {
+            "places/place1", "places/place2", "places/place3",
+            "places/place4", "places/place5", "places/place6"
+        };
 
+        public Dictionary<string, string> PlacesEtat { get; private set; } = new();
         private readonly Dictionary<string, string> bufferEtat = new();
         private readonly Dictionary<string, DateTime> timestampEtat = new();
         private readonly object lockObj = new();
 
         private IMqttClient mqttClient;
+        public bool IsConnected => mqttClient?.IsConnected == true;
 
         public event Action<string, string> OnMessageReceived;
 
         public async Task ConnectAsync()
         {
+            if (mqttClient != null && mqttClient.IsConnected)
+                return;
+
             var factory = new MqttFactory();
             mqttClient = factory.CreateMqttClient();
 
@@ -63,7 +69,7 @@ namespace SmartParking.Control
 
         private async Task VerifierEtatStable(string topic, string payloadInitial)
         {
-            await Task.Delay(3000); // Attente de 3 secondes
+            await Task.Delay(3000);
 
             lock (lockObj)
             {

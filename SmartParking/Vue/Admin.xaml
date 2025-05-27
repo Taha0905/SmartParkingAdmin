@@ -133,18 +133,25 @@
                     <StackPanel Grid.Row="1" Margin="15,10,15,0">
                         <TextBlock Text="MENU PRINCIPAL" FontSize="12" Foreground="#718096" Margin="10,0,0,15" FontWeight="SemiBold"/>
 
-                        <!-- Boutons de navigation -->
-                        <Button x:Name="VueDensembleButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="VueDensembleButton_Click">
+                        <!-- Bouton de navigation vers la page Réservations -->
+                        <Button x:Name="ReservationButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="ReservationButton_Click">
                             <StackPanel Orientation="Horizontal">
-                                <material:PackIcon Kind="ViewDashboard" Width="18" Height="18" VerticalAlignment="Center"/>
-                                <TextBlock Text="Vue d'ensemble" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                                <material:PackIcon Kind="CalendarCheck" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Réservations" Margin="12,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="AnalyseButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="AnalyseButton_Click">
+                        <Button x:Name="ParkingButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="ParkingButton_Click">
                             <StackPanel Orientation="Horizontal">
-                                <material:PackIcon Kind="ChartLine" Width="18" Height="18" VerticalAlignment="Center"/>
-                                <TextBlock Text="Analyse" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                                <material:PackIcon Kind="CarMultiple" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Parking" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="EnvironnementButton" Style="{StaticResource ModernSideMenuButtonStyle}" Click="EnvironnementButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <material:PackIcon Kind="WeatherCloudy" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Environnement" Margin="12,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 

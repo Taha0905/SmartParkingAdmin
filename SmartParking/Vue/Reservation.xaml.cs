@@ -2,6 +2,7 @@
 using SmartParking.Model;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,12 +12,8 @@ namespace SmartParking
 {
     public partial class VueDensemble : Page
     {
-
         private ObservableCollection<Reservation> AllReservations = new ObservableCollection<Reservation>();
-
         private readonly ReservationController reservationController = new ReservationController();
-        private readonly PlaceMqttManager mqttManager = new PlaceMqttManager();
-
         private readonly DispatcherTimer refreshTimer;
 
         public ObservableCollection<Reservation> Reservations { get; set; }
@@ -24,23 +21,12 @@ namespace SmartParking
         public VueDensemble()
         {
             InitializeComponent();
-
             Reservations = new ObservableCollection<Reservation>();
             ListViewReservations.ItemsSource = Reservations;
 
             LoadReservations();
 
-            // Connexion MQTT + mise à jour UI
-            mqttManager.OnMessageReceived += (topic, message) =>
-            {
-                if (Application.Current == null || Application.Current.Dispatcher == null)
-                    return;
-
-                Application.Current.Dispatcher.Invoke(() => UpdatePlacesState());
-            };
-            _ = mqttManager.ConnectAsync();
-
-            // Timer de rafraîchissement automatique
+            // Mise à jour automatique toutes les 5 secondes
             refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
             refreshTimer.Tick += (s, e) => LoadReservations();
             refreshTimer.Start();
@@ -84,14 +70,13 @@ namespace SmartParking
         {
             try
             {
-                //Ajout de la confirmation
                 var result = MessageBox.Show("Voulez-vous vraiment supprimer cette réservation ?",
                                              "Confirmation",
                                              MessageBoxButton.YesNo,
                                              MessageBoxImage.Question);
 
                 if (result != MessageBoxResult.Yes)
-                    return; // Si l'utilisateur annule, on sort sans supprimer
+                    return;
 
                 await reservationController.DeleteReservationAsync(reservationId);
                 LoadReservations();
@@ -102,27 +87,11 @@ namespace SmartParking
             }
         }
 
-        private void UpdatePlacesState()
-        {
-            int libres = 0, occupees = 0;
-            foreach (var etat in mqttManager.PlacesEtat.Values)
-            {
-                if (etat.Equals("Libre", StringComparison.OrdinalIgnoreCase)) libres++;
-                else if (etat.Equals("Prise", StringComparison.OrdinalIgnoreCase)) occupees++;
-            }
-
-            if (TextLibre != null)
-                TextLibre.Text = libres.ToString();
-
-            if (TextOccupe != null)
-                TextOccupe.Text = occupees.ToString();
-        }
-
         private void BtnFiltrer_Click(object sender, RoutedEventArgs e)
         {
             if (DateFiltre.SelectedDate.HasValue)
             {
-                refreshTimer.Stop(); // stop le refresh auto
+                refreshTimer.Stop();
 
                 DateTime dateSelectionnee = DateFiltre.SelectedDate.Value.Date;
 
@@ -139,14 +108,13 @@ namespace SmartParking
             }
         }
 
-
         private void BtnReinitialiser_Click(object sender, RoutedEventArgs e)
         {
             Reservations.Clear();
             foreach (var res in AllReservations)
                 Reservations.Add(res);
 
-            refreshTimer.Start(); // relance le refresh auto !
+            refreshTimer.Start();
         }
     }
 }

@@ -22,15 +22,21 @@ namespace SmartParking
             ContentFrame.Navigate(new VueDensemble());
         }
 
-        private void AnalyseButton_Click(object sender, RoutedEventArgs e)
+        private void EnvironnementButton_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(analysePage);
         }
 
-        private void VueDensembleButton_Click(object sender, RoutedEventArgs e)
+        private void ReservationButton_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new VueDensemble());
         }
+
+        private void ParkingButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Vue.Parking());
+        }
+
 
         private void CameraButton_Click(object sender, RoutedEventArgs e)
         {

@@ -18,6 +18,8 @@ namespace SmartParking
             this.ResizeMode = ResizeMode.NoResize;
         }
 
+
+
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text.Trim();
