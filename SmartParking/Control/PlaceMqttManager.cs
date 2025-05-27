@@ -74,9 +74,9 @@ namespace SmartParking.Control
             lock (lockObj)
             {
                 var maintenant = DateTime.Now;
-                var delta = maintenant - timestampEtat[topic];
-
-                if (bufferEtat[topic] == payloadInitial && delta.TotalSeconds >= 3)
+                if (bufferEtat.TryGetValue(topic, out string current) &&
+                    current == payloadInitial &&
+                    (maintenant - timestampEtat[topic]).TotalSeconds >= 2)
                 {
                     if (!PlacesEtat.ContainsKey(topic) || PlacesEtat[topic] != payloadInitial)
                     {

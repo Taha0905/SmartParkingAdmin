@@ -270,27 +270,27 @@
                                     <material:PackIcon Kind="BookOpen" Width="24" Height="24" Foreground="#4FD1C5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                                 <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center">
-                                    <Hyperlink NavigateUri="https://smartparking.com/docs" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
-                                        Documentation en ligne
-                                    </Hyperlink>
+                <Hyperlink NavigateUri="https://smartparking.quentinvrns.fr/docs" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
+                    Documentation en ligne
+                </Hyperlink>
                                 </TextBlock>
 
                                 <Border Grid.Row="1" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
                                     <material:PackIcon Kind="HelpCircleOutline" Width="24" Height="24" Foreground="#4FD1C5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                                 <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center">
-                                    <Hyperlink NavigateUri="https://smartparking.com/faq" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
-                                        Foire Aux Questions (FAQ)
-                                    </Hyperlink>
+                <Hyperlink NavigateUri="https://smartparking.quentinvrns.fr/faq" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
+                    Foire Aux Questions (FAQ)
+                </Hyperlink>
                                 </TextBlock>
 
                                 <Border Grid.Row="2" Grid.Column="0" Background="#1E293B" CornerRadius="8" Width="40" Height="40" Margin="0,5,15,5">
                                     <material:PackIcon Kind="Video" Width="24" Height="24" Foreground="#4FD1C5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                                 <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource SectionContentStyle}" VerticalAlignment="Center">
-                                    <Hyperlink NavigateUri="https://smartparking.com/tutorials" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
-                                        Tutoriels vidéo
-                                    </Hyperlink>
+                <Hyperlink NavigateUri="https://smartparking.quentinvrns.fr/tutoriels" RequestNavigate="Hyperlink_RequestNavigate" Style="{StaticResource HyperlinkStyle}">
+                    Tutoriels vidéo
+                </Hyperlink>
                                 </TextBlock>
                             </Grid>
                         </StackPanel>
