@@ -97,14 +97,19 @@ namespace SmartParking.Vue
 
         private void UpdateStats()
         {
-            int total = topicToPlaceName.Count;
             int libres = 0, prises = 0;
 
-            foreach (var etat in mqttManager.PlacesEtat.Values)
+            foreach (var topic in placeStatusText.Keys)
             {
-                if (etat == "Libre") libres++;
-                else if (etat == "Prise") prises++;
+                var color = (placeStatusText[topic].Foreground as SolidColorBrush)?.Color;
+
+                if (color == (Color)ColorConverter.ConvertFromString("#48BB78")) // vert
+                    libres++;
+                else if (color == (Color)ColorConverter.ConvertFromString("#F56565")) // rouge
+                    prises++;
             }
+
+            int total = libres + prises;
 
             PlacesDispoText.Text = libres.ToString();
             PlacesOccupeesText.Text = prises.ToString();
