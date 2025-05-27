@@ -16,7 +16,7 @@ namespace SmartParking
 
         // Anti-spam des alertes
         private Dictionary<string, DateTime> dernierAlerte = new Dictionary<string, DateTime>();
-        private readonly TimeSpan delaiAlerte = TimeSpan.FromSeconds(20);
+        private readonly TimeSpan delaiAlerte = TimeSpan.FromSeconds(30);
 
         private MqttManager()
         {
