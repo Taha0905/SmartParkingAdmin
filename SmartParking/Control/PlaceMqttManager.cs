@@ -2,6 +2,7 @@
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -13,6 +14,10 @@ namespace SmartParking.Control
     {
         private readonly string[] _topics = { "places/place1", "places/place2", "places/place3", "places/place4", "places/place5", "places/place6" };
         public Dictionary<string, string> PlacesEtat { get; private set; } = new();
+
+        private readonly Dictionary<string, string> bufferEtat = new();
+        private readonly Dictionary<string, DateTime> timestampEtat = new();
+        private readonly object lockObj = new();
 
         private IMqttClient mqttClient;
 
@@ -34,8 +39,15 @@ namespace SmartParking.Control
                 string topic = e.ApplicationMessage.Topic;
                 string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 
-                PlacesEtat[topic] = payload;
-                OnMessageReceived?.Invoke(topic, payload);
+                lock (lockObj)
+                {
+                    if (!bufferEtat.ContainsKey(topic) || bufferEtat[topic] != payload)
+                    {
+                        bufferEtat[topic] = payload;
+                        timestampEtat[topic] = DateTime.Now;
+                        Task.Run(() => VerifierEtatStable(topic, payload));
+                    }
+                }
             });
 
             await mqttClient.ConnectAsync(options, CancellationToken.None);
@@ -43,7 +55,29 @@ namespace SmartParking.Control
             foreach (var topic in _topics)
             {
                 PlacesEtat[topic] = "Inconnu";
+                bufferEtat[topic] = "Inconnu";
+                timestampEtat[topic] = DateTime.Now;
                 await mqttClient.SubscribeAsync(topic);
+            }
+        }
+
+        private async Task VerifierEtatStable(string topic, string payloadInitial)
+        {
+            await Task.Delay(3000); // Attente de 3 secondes
+
+            lock (lockObj)
+            {
+                var maintenant = DateTime.Now;
+                var delta = maintenant - timestampEtat[topic];
+
+                if (bufferEtat[topic] == payloadInitial && delta.TotalSeconds >= 3)
+                {
+                    if (!PlacesEtat.ContainsKey(topic) || PlacesEtat[topic] != payloadInitial)
+                    {
+                        PlacesEtat[topic] = payloadInitial;
+                        OnMessageReceived?.Invoke(topic, payloadInitial);
+                    }
+                }
             }
         }
     }
